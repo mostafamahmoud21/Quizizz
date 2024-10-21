@@ -12,6 +12,8 @@ const quizzes_module_1 = require("./quizzes/quizzes.module");
 const auth_module_1 = require("./auth/auth.module");
 const questions_module_1 = require("./questions/questions.module");
 const choices_module_1 = require("./choices/choices.module");
+const dotenv = require("dotenv");
+dotenv.config();
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
