@@ -22,7 +22,7 @@ let QuizzesService = class QuizzesService {
                 data: {
                     title: createQuizDto.title,
                     description: createQuizDto.description,
-                    instructorId: instructorId
+                    instructorId: instructorId,
                 },
             });
         }
@@ -30,7 +30,7 @@ let QuizzesService = class QuizzesService {
             throw new common_1.BadRequestException('Failed to create quiz');
         }
     }
-    async findAllQuizzes() {
+    async getQuizzes() {
         try {
             return await this.prisma.quiz.findMany();
         }
@@ -38,33 +38,41 @@ let QuizzesService = class QuizzesService {
             throw new common_1.BadRequestException('Failed to retrieve quizzes');
         }
     }
-    async findQuizById(id) {
-        const quiz = await this.prisma.quiz.findUnique({
-            where: { id },
-        });
-        if (!quiz) {
-            throw new common_1.NotFoundException(`Quiz with ID ${id} not found`);
-        }
-        return quiz;
+    async getQuizById(id) {
+        return this.ensureQuizExists(id);
     }
-    async updateQuiz(id, updateQuizDto) {
-        await this.ensureQuizExists(id);
+    async updateQuiz(id, updateQuizDto, instructorId) {
+        const quiz = await this.ensureQuizExists(id);
+        if (quiz.instructorId !== instructorId) {
+            throw new common_1.BadRequestException('You do not have permission to update this quiz');
+        }
+        const updatedData = {};
+        if (updateQuizDto.title) {
+            updatedData.title = updateQuizDto.title;
+        }
+        if (updateQuizDto.description) {
+            updatedData.description = updateQuizDto.description;
+        }
         try {
             return await this.prisma.quiz.update({
                 where: { id },
-                data: updateQuizDto,
+                data: updatedData,
             });
         }
         catch (error) {
             throw new common_1.BadRequestException(`Failed to update quiz with ID ${id}`);
         }
     }
-    async removeQuiz(id) {
-        await this.ensureQuizExists(id);
+    async deleteQuiz(id, instructorId) {
+        const quiz = await this.ensureQuizExists(id);
+        if (quiz.instructorId !== instructorId) {
+            throw new common_1.BadRequestException('You do not have permission to delete this quiz');
+        }
         try {
-            return await this.prisma.quiz.delete({
+            await this.prisma.quiz.delete({
                 where: { id },
             });
+            return { message: `Quiz with ID ${id} has been successfully deleted` };
         }
         catch (error) {
             throw new common_1.BadRequestException(`Failed to delete quiz with ID ${id}`);
@@ -77,6 +85,7 @@ let QuizzesService = class QuizzesService {
         if (!quiz) {
             throw new common_1.NotFoundException(`Quiz with ID ${id} not found`);
         }
+        return quiz;
     }
 };
 exports.QuizzesService = QuizzesService;

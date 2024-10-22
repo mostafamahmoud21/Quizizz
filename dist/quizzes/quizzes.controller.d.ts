@@ -29,7 +29,7 @@ export declare class QuizzesController {
         createdAt: Date;
         updatedAt: Date;
     }>;
-    update(id: string, updateQuizDto: UpdateQuizDto): Promise<{
+    update(id: string, updateQuizDto: UpdateQuizDto, req: Request): Promise<{
         id: number;
         title: string;
         description: string;
@@ -37,12 +37,7 @@ export declare class QuizzesController {
         createdAt: Date;
         updatedAt: Date;
     }>;
-    remove(id: string): Promise<{
-        id: number;
-        title: string;
-        description: string;
-        instructorId: number;
-        createdAt: Date;
-        updatedAt: Date;
+    remove(id: string, req: Request): Promise<{
+        message: string;
     }>;
 }

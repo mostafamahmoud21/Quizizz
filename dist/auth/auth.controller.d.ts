@@ -7,26 +7,26 @@ export declare class AuthController {
     private readonly authService;
     constructor(authService: AuthService);
     registerInstructor(dto: RegisterInstructorDto): Promise<Partial<{
-        name: string;
         id: number;
+        createdAt: Date;
+        updatedAt: Date;
+        name: string;
         email: string;
         password: string;
         role: import(".prisma/client").$Enums.Role;
-        createdAt: Date;
-        updatedAt: Date;
     }>>;
     loginInstructor(dto: LoginInstructorDto): Promise<{
         instructor: import(".prisma/client").Instructor;
         access_token: string;
     }>;
     registerStudent(dto: CreateStudentDto): Promise<Partial<{
-        name: string;
         id: number;
+        createdAt: Date;
+        updatedAt: Date;
+        name: string;
         email: string;
         password: string;
         role: import(".prisma/client").$Enums.Role;
-        createdAt: Date;
-        updatedAt: Date;
     }>>;
     loginStudent(dto: LoginStudentDto): Promise<{
         student: import(".prisma/client").Student;

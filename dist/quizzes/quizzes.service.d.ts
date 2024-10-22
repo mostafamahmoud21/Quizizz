@@ -12,7 +12,7 @@ export declare class QuizzesService {
         createdAt: Date;
         updatedAt: Date;
     }>;
-    findAllQuizzes(): Promise<{
+    getQuizzes(): Promise<{
         id: number;
         title: string;
         description: string;
@@ -20,7 +20,7 @@ export declare class QuizzesService {
         createdAt: Date;
         updatedAt: Date;
     }[]>;
-    findQuizById(id: number): Promise<{
+    getQuizById(id: number): Promise<{
         id: number;
         title: string;
         description: string;
@@ -28,7 +28,7 @@ export declare class QuizzesService {
         createdAt: Date;
         updatedAt: Date;
     }>;
-    updateQuiz(id: number, updateQuizDto: UpdateQuizDto): Promise<{
+    updateQuiz(id: number, updateQuizDto: UpdateQuizDto, instructorId: number): Promise<{
         id: number;
         title: string;
         description: string;
@@ -36,13 +36,8 @@ export declare class QuizzesService {
         createdAt: Date;
         updatedAt: Date;
     }>;
-    removeQuiz(id: number): Promise<{
-        id: number;
-        title: string;
-        description: string;
-        instructorId: number;
-        createdAt: Date;
-        updatedAt: Date;
+    deleteQuiz(id: number, instructorId: number): Promise<{
+        message: string;
     }>;
     private ensureQuizExists;
 }
