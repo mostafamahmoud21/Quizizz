@@ -13,6 +13,7 @@ const auth_module_1 = require("./auth/auth.module");
 const questions_module_1 = require("./questions/questions.module");
 const choices_module_1 = require("./choices/choices.module");
 const dotenv = require("dotenv");
+const prisma_service_1 = require("./prisma/prisma.service");
 dotenv.config();
 let AppModule = class AppModule {
 };
@@ -21,7 +22,7 @@ exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [quizzes_module_1.QuizzesModule, auth_module_1.AuthModule, questions_module_1.QuestionsModule, choices_module_1.ChoicesModule],
         controllers: [],
-        providers: [],
+        providers: [prisma_service_1.PrismaService],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map
