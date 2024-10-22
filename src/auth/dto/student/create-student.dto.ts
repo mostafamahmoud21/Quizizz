@@ -1,14 +1,15 @@
-import { IsEmail, IsString, MinLength } from "class-validator";
+import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
-export class RegisterInstructorDto {
+export class CreateStudentDto {
+  @IsNotEmpty()
   @IsString()
-  @MinLength(3)
   name!: string; // Use definite assignment operator
 
+  @IsNotEmpty()
   @IsEmail()
   email!: string; // Use definite assignment operator
 
+  @IsNotEmpty()
   @IsString()
-  @MinLength(8)
   password!: string; // Use definite assignment operator
 }

@@ -1,17 +1,14 @@
+import { IsEmail, IsString, MinLength } from "class-validator";
 
-import { IsEmail, IsString, MinLength} from "class-validator";
+export class LoginInstructorDto {
+  @IsString()
+  @MinLength(3)
+  name?: string; // Marked as optional
 
-export class LoginInstructorDto{
+  @IsEmail()
+  email!: string; // Use definite assignment operator
 
-@IsString()
-@MinLength(3)
-name: string;
-
-@IsEmail()
-email: string;
-
-
-@IsString()
-@MinLength(8)
-password: string;
+  @IsString()
+  @MinLength(8)
+  password!: string; // Use definite assignment operator
 }
