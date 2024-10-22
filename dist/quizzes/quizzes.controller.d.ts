@@ -6,33 +6,33 @@ export declare class QuizzesController {
     private readonly quizzesService;
     constructor(quizzesService: QuizzesService);
     create(req: Request, createQuizDto: CreateQuizDto): Promise<{
-        id: number;
         title: string;
         description: string;
+        id: number;
         instructorId: number;
         createdAt: Date;
         updatedAt: Date;
     }>;
     findAll(): Promise<{
-        id: number;
         title: string;
         description: string;
+        id: number;
         instructorId: number;
         createdAt: Date;
         updatedAt: Date;
     }[]>;
     findOne(id: string): Promise<{
-        id: number;
         title: string;
         description: string;
+        id: number;
         instructorId: number;
         createdAt: Date;
         updatedAt: Date;
     }>;
     update(id: string, updateQuizDto: UpdateQuizDto, req: Request): Promise<{
-        id: number;
         title: string;
         description: string;
+        id: number;
         instructorId: number;
         createdAt: Date;
         updatedAt: Date;

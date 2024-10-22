@@ -5,33 +5,33 @@ export declare class QuizzesService {
     private readonly prisma;
     constructor(prisma: PrismaClient);
     createQuiz(createQuizDto: CreateQuizDto, instructorId: number): Promise<{
-        id: number;
         title: string;
         description: string;
+        id: number;
         instructorId: number;
         createdAt: Date;
         updatedAt: Date;
     }>;
     getQuizzes(): Promise<{
-        id: number;
         title: string;
         description: string;
+        id: number;
         instructorId: number;
         createdAt: Date;
         updatedAt: Date;
     }[]>;
     getQuizById(id: number): Promise<{
-        id: number;
         title: string;
         description: string;
+        id: number;
         instructorId: number;
         createdAt: Date;
         updatedAt: Date;
     }>;
     updateQuiz(id: number, updateQuizDto: UpdateQuizDto, instructorId: number): Promise<{
-        id: number;
         title: string;
         description: string;
+        id: number;
         instructorId: number;
         createdAt: Date;
         updatedAt: Date;
