@@ -8,15 +8,13 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
 const client_1 = require("@prisma/client");
 const bcrypt = require("bcrypt");
 const jwt_1 = require("@nestjs/jwt");
+const roles_enum_1 = require("./enums/roles.enum");
 let AuthService = class AuthService {
     constructor(prisma, jwtService) {
         this.prisma = prisma;
@@ -29,12 +27,13 @@ let AuthService = class AuthService {
         }
         const hashedPassword = await bcrypt.hash(dto.password, 10);
         const createdInstructor = await this.prisma.instructor.create({
-            data: { ...dto, password: hashedPassword },
+            data: { ...dto, password: hashedPassword, role: roles_enum_1.Role.INSTRUCTOR },
             select: {
                 id: true,
                 name: true,
                 createdAt: true,
                 updatedAt: true,
+                role: true,
             },
         });
         return createdInstructor;
@@ -54,12 +53,55 @@ let AuthService = class AuthService {
             id: instructor.id,
             name: instructor.name,
             email: instructor.email,
+            role: instructor.role,
         };
-        console.log('Signing payload:', payload);
         const token = this.jwtService.sign(payload);
-        console.log('Generated token:', token);
         return {
             instructor: instructor,
+            access_token: token,
+        };
+    }
+    async registerStudent(dto) {
+        const existingStudent = await this.prisma.student.findUnique({ where: { email: dto.email } });
+        if (existingStudent) {
+            throw new common_1.ConflictException('Student already exists');
+        }
+        const hashedPassword = await bcrypt.hash(dto.password, 10);
+        const createdStudent = await this.prisma.student.create({
+            data: { ...dto, password: hashedPassword, role: roles_enum_1.Role.STUDENT },
+            select: {
+                id: true,
+                name: true,
+                createdAt: true,
+                updatedAt: true,
+                role: true,
+            },
+        });
+        return createdStudent;
+    }
+    async loginStudent(dto) {
+        const student = await this.prisma.student.findUnique({
+            where: { email: dto.email },
+        });
+        if (!student) {
+            throw new common_1.UnauthorizedException('Student not found');
+        }
+        if (!dto.password || !student.password) {
+            throw new common_1.UnauthorizedException('Invalid email or password');
+        }
+        const isPasswordValid = await bcrypt.compare(dto.password, student.password);
+        if (!isPasswordValid) {
+            throw new common_1.UnauthorizedException('Invalid email or password');
+        }
+        const payload = {
+            id: student.id,
+            name: student.name,
+            email: student.email,
+            role: student.role,
+        };
+        const token = this.jwtService.sign(payload);
+        return {
+            student: student,
             access_token: token,
         };
     }
@@ -67,7 +109,6 @@ let AuthService = class AuthService {
 exports.AuthService = AuthService;
 exports.AuthService = AuthService = __decorate([
     (0, common_1.Injectable)(),
-    __param(1, (0, common_1.Inject)(jwt_1.JwtService)),
     __metadata("design:paramtypes", [client_1.PrismaClient,
         jwt_1.JwtService])
 ], AuthService);

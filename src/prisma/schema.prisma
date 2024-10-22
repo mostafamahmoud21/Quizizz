@@ -1,10 +1,6 @@
 generator client {
   provider = "prisma-client-js"
 }
-enum Role {
-  INSTRUCTOR
-  STUDENT
-}
 
 datasource db {
   provider = "postgresql"
@@ -22,6 +18,10 @@ model Instructor {
 
   // Relations
   quizzes    Quiz[]
+}
+enum Role {
+  INSTRUCTOR
+  STUDENT
 }
 
 model Student {

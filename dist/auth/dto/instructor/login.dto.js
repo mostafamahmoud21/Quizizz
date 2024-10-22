@@ -15,11 +15,6 @@ class LoginInstructorDto {
 }
 exports.LoginInstructorDto = LoginInstructorDto;
 __decorate([
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.MinLength)(3),
-    __metadata("design:type", String)
-], LoginInstructorDto.prototype, "name", void 0);
-__decorate([
     (0, class_validator_1.IsEmail)(),
     __metadata("design:type", String)
 ], LoginInstructorDto.prototype, "email", void 0);

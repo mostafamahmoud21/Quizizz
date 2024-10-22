@@ -25,7 +25,7 @@ export class AuthService {
     const existingInstructor = await this.prisma.instructor.findUnique({ where: { email: dto.email } });
     if (existingInstructor) {
       throw new ConflictException('Instructor already exists');
-    }
+    } 
 
     const hashedPassword = await bcrypt.hash(dto.password, 10);
     const createdInstructor = await this.prisma.instructor.create({
