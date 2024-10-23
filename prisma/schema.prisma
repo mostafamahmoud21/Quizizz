@@ -19,10 +19,7 @@ model Instructor {
   // Relations
   quizzes    Quiz[]
 }
-enum Role {
-  INSTRUCTOR
-  STUDENT
-}
+
 
 model Student {
   id        Int      @id @default(autoincrement())
@@ -32,6 +29,11 @@ model Student {
    role      Role  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+enum Role {
+  INSTRUCTOR
+  STUDENT
 }
 
 model Quiz {

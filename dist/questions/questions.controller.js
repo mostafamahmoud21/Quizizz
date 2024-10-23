@@ -32,7 +32,7 @@ let QuestionsController = class QuestionsController {
         return this.questionsService.updateQuestion(+id, updateQuestionDto);
     }
     async DeleteQuestion(id) {
-        return this.questionsService.DeleteQues(+id);
+        return this.questionsService.DeleteQues(id);
     }
     async QuestionWithQuizId(quizId) {
         return this.questionsService.findByQuiz(quizId);
@@ -46,21 +46,21 @@ __decorate([
     __param(0, (0, common_1.Param)('quizId')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, create_question_dto_1.CreateQuestionDto]),
+    __metadata("design:paramtypes", [Number, create_question_dto_1.CreateQuestionDto]),
     __metadata("design:returntype", Promise)
 ], QuestionsController.prototype, "createQuestion", null);
 __decorate([
-    (0, common_1.Put)('updatedQuestion'),
+    (0, common_1.Put)(':id'),
     (0, common_1.UseGuards)(jwt_middleware_1.JwtMiddleware, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(roles_enum_1.Role.INSTRUCTOR),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, create_question_dto_2.UpdateQuestionDto]),
+    __metadata("design:paramtypes", [Number, create_question_dto_2.UpdateQuestionDto]),
     __metadata("design:returntype", Promise)
 ], QuestionsController.prototype, "update", null);
 __decorate([
-    (0, common_1.Delete)('Deletedquestion'),
+    (0, common_1.Delete)(':id'),
     (0, common_1.UseGuards)(jwt_middleware_1.JwtMiddleware, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(roles_enum_1.Role.INSTRUCTOR),
     __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),

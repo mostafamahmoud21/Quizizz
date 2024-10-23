@@ -4,32 +4,32 @@ import { UpdateQuestionDto } from './dto/create-question-dto';
 export declare class QuestionsController {
     private readonly questionsService;
     constructor(questionsService: QuestionsService);
-    createQuestion(quizId: string, createQuestionDto: CreateQuestionDto): Promise<{
+    createQuestion(quizId: number, createQuestionDto: CreateQuestionDto): Promise<{
         id: number;
-        createdAt: Date;
-        updatedAt: Date;
         text: string;
         quizId: number;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
-    update(id: string, updateQuestionDto: UpdateQuestionDto): Promise<{
+    update(id: number, updateQuestionDto: UpdateQuestionDto): Promise<{
         id: number;
-        createdAt: Date;
-        updatedAt: Date;
         text: string;
         quizId: number;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
     DeleteQuestion(id: number): Promise<{
         id: number;
-        createdAt: Date;
-        updatedAt: Date;
         text: string;
         quizId: number;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
     QuestionWithQuizId(quizId: number): Promise<{
         id: number;
-        createdAt: Date;
-        updatedAt: Date;
         text: string;
         quizId: number;
+        createdAt: Date;
+        updatedAt: Date;
     }[]>;
 }

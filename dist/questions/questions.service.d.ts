@@ -6,30 +6,30 @@ export declare class QuestionsService {
     constructor(prisma: PrismaClient);
     createQuestion(quizId: number, createQuestionDto: CreateQuestionDto): Promise<{
         id: number;
-        createdAt: Date;
-        updatedAt: Date;
         text: string;
         quizId: number;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
     updateQuestion(id: number, updateQuestionDto: UpdateQuestionDto): Promise<{
         id: number;
-        createdAt: Date;
-        updatedAt: Date;
         text: string;
         quizId: number;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
     DeleteQues(id: number): Promise<{
         id: number;
-        createdAt: Date;
-        updatedAt: Date;
         text: string;
         quizId: number;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
     findByQuiz(quizId: number): Promise<{
         id: number;
-        createdAt: Date;
-        updatedAt: Date;
         text: string;
         quizId: number;
+        createdAt: Date;
+        updatedAt: Date;
     }[]>;
 }

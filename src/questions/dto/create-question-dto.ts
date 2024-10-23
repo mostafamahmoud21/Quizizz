@@ -5,8 +5,8 @@ export class CreateQuestionDto {
     @IsNotEmpty()
     text: string;  // Corresponds to the 'text' field in the Question model
 
-    @IsInt()
-    quizId: number; // Ensure quizId is an integer
+    // @IsInt()
+    // quizId: number; // Ensure quizId is an integer
 }
 
 export class UpdateQuestionDto {

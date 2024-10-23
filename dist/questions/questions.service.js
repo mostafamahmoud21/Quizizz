@@ -31,6 +31,11 @@ let QuestionsService = class QuestionsService {
         });
     }
     async DeleteQues(id) {
+        await this.prisma.choice.deleteMany({
+            where: {
+                questionId: id,
+            },
+        });
         return this.prisma.question.delete({
             where: { id },
         });

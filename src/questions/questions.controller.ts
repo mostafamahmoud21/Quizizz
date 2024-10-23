@@ -15,27 +15,27 @@ export class QuestionsController {
   @UseGuards(JwtMiddleware, RolesGuard)
   @Roles(Role.INSTRUCTOR)
   async createQuestion  (
-    @Param('quizId') quizId: string,
+    @Param('quizId') quizId: number,
     @Body() createQuestionDto: CreateQuestionDto,
   ) {
     return this.questionsService.createQuestion(+quizId, createQuestionDto);
   }
 
-  @Put('updatedQuestion')
+  @Put(':id')
   @UseGuards(JwtMiddleware, RolesGuard)
   @Roles(Role.INSTRUCTOR)
   async update(
-    @Param('id') id: string,
+    @Param('id') id: number,
     @Body() updateQuestionDto: UpdateQuestionDto,
   ) {
     return this.questionsService.updateQuestion(+id, updateQuestionDto);
   }
 
-  @Delete('Deletedquestion')
+  @Delete(':id')
   @UseGuards(JwtMiddleware, RolesGuard)
   @Roles(Role.INSTRUCTOR)
   async DeleteQuestion(@Param('id',ParseIntPipe) id: number) {
-    return this.questionsService.DeleteQues(+id);
+    return this.questionsService.DeleteQues(id);
   }
 
   @Get()

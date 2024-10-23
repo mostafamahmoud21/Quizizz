@@ -16,7 +16,7 @@ class createChoiceDto {
 exports.createChoiceDto = createChoiceDto;
 __decorate([
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.Min)(3),
+    (0, class_validator_1.MinLength)(3, { message: 'Text must be at least 3 characters long' }),
     __metadata("design:type", String)
 ], createChoiceDto.prototype, "text", void 0);
 //# sourceMappingURL=create-choice.dto.js.map

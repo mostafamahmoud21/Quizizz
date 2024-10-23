@@ -5,7 +5,7 @@ import { UpdateQuestionDto } from './dto/create-question-dto';
 
 @Injectable()
 export class QuestionsService {
-  constructor(private prisma: PrismaClient) {}
+  constructor(private prisma: PrismaClient) { }
 
   async createQuestion(quizId: number, createQuestionDto: CreateQuestionDto) {
     return this.prisma.question.create({
@@ -24,6 +24,12 @@ export class QuestionsService {
   }
 
   async DeleteQues(id: number) {
+    await this.prisma.choice.deleteMany({
+      where: {
+        questionId: id,
+      },
+    });
+
     return this.prisma.question.delete({
       where: { id },
     });

@@ -1,7 +1,7 @@
-import { IsString, Min } from 'class-validator';
+import { IsString, MinLength } from 'class-validator';
 
 export class createChoiceDto {
   @IsString()
-  @Min(3)
+  @MinLength(3, { message: 'Text must be at least 3 characters long' })
   text: string;
 }
