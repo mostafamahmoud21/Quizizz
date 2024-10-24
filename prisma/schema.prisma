@@ -54,6 +54,7 @@ model Question {
   text      String
   quizId    Int
   quiz      Quiz     @relation(fields: [quizId], references: [id])
+  level     Levels
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -68,4 +69,10 @@ model Choice {
   question   Question @relation(fields: [questionId], references: [id])
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+}
+
+enum Levels {
+  Easy
+  Medium
+  Hard
 }
