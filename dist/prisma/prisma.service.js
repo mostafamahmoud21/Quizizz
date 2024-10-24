@@ -6,20 +6,24 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ChoicesModule = void 0;
+exports.PrismaService = void 0;
 const common_1 = require("@nestjs/common");
-const choices_service_1 = require("./choices.service");
-const choices_controller_1 = require("./choices.controller");
-const prisma_service_1 = require("../prisma/prisma.service");
-const auth_module_1 = require("../auth/auth.module");
-let ChoicesModule = class ChoicesModule {
+const client_1 = require("@prisma/client");
+let PrismaService = class PrismaService extends client_1.PrismaClient {
+    async onModuleInit() {
+        await this.$connect();
+    }
+    async enableShutdownHooks() {
+        process.on('beforeExit', async () => {
+            await this.$disconnect();
+        });
+    }
+    async onModuleDestroy() {
+        await this.$disconnect();
+    }
 };
-exports.ChoicesModule = ChoicesModule;
-exports.ChoicesModule = ChoicesModule = __decorate([
-    (0, common_1.Module)({
-        imports: [auth_module_1.AuthModule],
-        controllers: [choices_controller_1.ChoicesController],
-        providers: [choices_service_1.ChoicesService, prisma_service_1.PrismaService],
-    })
-], ChoicesModule);
-//# sourceMappingURL=choices.module.js.map
+exports.PrismaService = PrismaService;
+exports.PrismaService = PrismaService = __decorate([
+    (0, common_1.Injectable)()
+], PrismaService);
+//# sourceMappingURL=prisma.service.js.map

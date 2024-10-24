@@ -25,17 +25,23 @@ let QuestionsController = class QuestionsController {
     constructor(questionsService) {
         this.questionsService = questionsService;
     }
-    async createQuestion(quizId, createQuestionDto) {
-        return this.questionsService.createQuestion(+quizId, createQuestionDto);
+    async createQuestion(req, quizId, createQuestionDto) {
+        const instructorId = req.user.id;
+        return this.questionsService.createQuestion(quizId, createQuestionDto, instructorId);
     }
-    async update(id, updateQuestionDto) {
-        return this.questionsService.updateQuestion(+id, updateQuestionDto);
+    async getQuestions(quizId) {
+        return this.questionsService.getQuestions(quizId);
     }
-    async DeleteQuestion(id) {
-        return this.questionsService.DeleteQues(+id);
+    async getQuestionById(quizId, questionId) {
+        return this.questionsService.getQuestionById(quizId, questionId);
     }
-    async QuestionWithQuizId(quizId) {
-        return this.questionsService.findByQuiz(quizId);
+    async updateQuestion(req, quizId, questionId, updateQuestionDto) {
+        const instructorId = req.user.id;
+        return this.questionsService.updateQuestion(quizId, questionId, updateQuestionDto, instructorId);
+    }
+    async deleteQuestion(req, quizId, questionId) {
+        const instructorId = req.user.id;
+        return this.questionsService.deleteQuestion(quizId, questionId, instructorId);
     }
 };
 exports.QuestionsController = QuestionsController;
@@ -43,40 +49,51 @@ __decorate([
     (0, common_1.Post)(),
     (0, common_1.UseGuards)(jwt_middleware_1.JwtMiddleware, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(roles_enum_1.Role.INSTRUCTOR),
-    __param(0, (0, common_1.Param)('quizId')),
-    __param(1, (0, common_1.Body)()),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Param)('quizId', common_1.ParseIntPipe)),
+    __param(2, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, create_question_dto_1.CreateQuestionDto]),
+    __metadata("design:paramtypes", [Object, Number, create_question_dto_1.CreateQuestionDto]),
     __metadata("design:returntype", Promise)
 ], QuestionsController.prototype, "createQuestion", null);
 __decorate([
-    (0, common_1.Put)('updatedQuestion'),
-    (0, common_1.UseGuards)(jwt_middleware_1.JwtMiddleware, roles_guard_1.RolesGuard),
-    (0, roles_decorator_1.Roles)(roles_enum_1.Role.INSTRUCTOR),
-    __param(0, (0, common_1.Param)('id')),
-    __param(1, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, create_question_dto_2.UpdateQuestionDto]),
-    __metadata("design:returntype", Promise)
-], QuestionsController.prototype, "update", null);
-__decorate([
-    (0, common_1.Delete)('Deletedquestion'),
-    (0, common_1.UseGuards)(jwt_middleware_1.JwtMiddleware, roles_guard_1.RolesGuard),
-    (0, roles_decorator_1.Roles)(roles_enum_1.Role.INSTRUCTOR),
-    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
-    __metadata("design:returntype", Promise)
-], QuestionsController.prototype, "DeleteQuestion", null);
-__decorate([
     (0, common_1.Get)(),
-    (0, common_1.UseGuards)(jwt_middleware_1.JwtMiddleware, roles_guard_1.RolesGuard),
-    (0, roles_decorator_1.Roles)(roles_enum_1.Role.INSTRUCTOR),
     __param(0, (0, common_1.Param)('quizId', common_1.ParseIntPipe)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
-], QuestionsController.prototype, "QuestionWithQuizId", null);
+], QuestionsController.prototype, "getQuestions", null);
+__decorate([
+    (0, common_1.Get)(':questionId'),
+    __param(0, (0, common_1.Param)('quizId', common_1.ParseIntPipe)),
+    __param(1, (0, common_1.Param)('questionId', common_1.ParseIntPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Number]),
+    __metadata("design:returntype", Promise)
+], QuestionsController.prototype, "getQuestionById", null);
+__decorate([
+    (0, common_1.Put)(':questionId'),
+    (0, common_1.UseGuards)(jwt_middleware_1.JwtMiddleware, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)(roles_enum_1.Role.INSTRUCTOR),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Param)('quizId', common_1.ParseIntPipe)),
+    __param(2, (0, common_1.Param)('questionId', common_1.ParseIntPipe)),
+    __param(3, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Number, Number, create_question_dto_2.UpdateQuestionDto]),
+    __metadata("design:returntype", Promise)
+], QuestionsController.prototype, "updateQuestion", null);
+__decorate([
+    (0, common_1.Delete)(':questionId'),
+    (0, common_1.UseGuards)(jwt_middleware_1.JwtMiddleware, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)(roles_enum_1.Role.INSTRUCTOR),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Param)('quizId', common_1.ParseIntPipe)),
+    __param(2, (0, common_1.Param)('questionId', common_1.ParseIntPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Number, Number]),
+    __metadata("design:returntype", Promise)
+], QuestionsController.prototype, "deleteQuestion", null);
 exports.QuestionsController = QuestionsController = __decorate([
     (0, common_1.Controller)('quizzes/:quizId/questions'),
     __metadata("design:paramtypes", [questions_service_1.QuestionsService])
