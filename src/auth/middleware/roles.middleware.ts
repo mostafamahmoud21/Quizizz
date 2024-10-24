@@ -6,6 +6,7 @@ import { User } from '../interfaces/user.interface'; // Adjust path
 export class RolesMiddleware implements NestMiddleware {
   constructor(private readonly roles: string[]) {}
 
+
   use(req: Request, res: Response, next: NextFunction) {
     const user = req.user as User; // Cast user to User type
 
