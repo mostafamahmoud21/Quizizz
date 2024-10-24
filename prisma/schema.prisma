@@ -12,23 +12,25 @@ model Instructor {
   name       String
   email      String   @unique
   password   String
-   role      Role  
+  role       Role  
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
   // Relations
-  quizzes    Quiz[]
+  quizzes    Quiz[] // One instructor can create many quizzes
 }
-
 
 model Student {
   id        Int      @id @default(autoincrement())
   name      String
   email     String   @unique
   password  String
-   role      Role  
+  role      Role  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  // Relations
+  quizAttempts QuizAttempt[] // One student can have many quiz attempts
 }
 
 enum Role {
@@ -46,7 +48,8 @@ model Quiz {
   updatedAt    DateTime   @updatedAt
 
   // Relations
-  questions    Question[]
+  questions    Question[]      // A quiz can have many questions
+  quizAttempts  QuizAttempt[]  // A quiz can be attempted multiple times
 }
 
 model Question {
@@ -58,14 +61,27 @@ model Question {
   updatedAt DateTime @updatedAt
 
   // Relations
-  choices   Choice[]
+  choices   Choice[] // A question can have many choices
 }
 
 model Choice {
   id         Int      @id @default(autoincrement())
   text       String
+ 
   questionId Int
   question   Question @relation(fields: [questionId], references: [id])
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+}
+
+model QuizAttempt {
+  id         Int      @id @default(autoincrement())
+  quizId     Int
+  studentId  Int
+  score      Int
+  dateTaken  DateTime @default(now())
+  quiz       Quiz     @relation(fields: [quizId], references: [id])
+  student    Student  @relation(fields: [studentId], references: [id])
+  
+  @@unique([quizId, studentId]) // Composite unique constraint
 }

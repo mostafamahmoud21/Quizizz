@@ -6,30 +6,30 @@ export declare class QuestionsController {
     constructor(questionsService: QuestionsService);
     createQuestion(quizId: number, createQuestionDto: CreateQuestionDto): Promise<{
         id: number;
-        text: string;
-        quizId: number;
         createdAt: Date;
         updatedAt: Date;
+        quizId: number;
+        text: string;
     }>;
     update(id: number, updateQuestionDto: UpdateQuestionDto): Promise<{
         id: number;
-        text: string;
-        quizId: number;
         createdAt: Date;
         updatedAt: Date;
+        quizId: number;
+        text: string;
     }>;
     DeleteQuestion(id: number): Promise<{
         id: number;
-        text: string;
-        quizId: number;
         createdAt: Date;
         updatedAt: Date;
+        quizId: number;
+        text: string;
     }>;
     QuestionWithQuizId(quizId: number): Promise<{
         id: number;
-        text: string;
-        quizId: number;
         createdAt: Date;
         updatedAt: Date;
+        quizId: number;
+        text: string;
     }[]>;
 }

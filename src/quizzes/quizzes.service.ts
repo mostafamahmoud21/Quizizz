@@ -6,6 +6,7 @@ import {
 import { PrismaClient } from '@prisma/client';
 import { CreateQuizDto } from './dto/create-quiz.dto';
 import { UpdateQuizDto } from './dto/update-quiz.dto';
+import { SubmitAnswersDto } from './dto/submit-answers.dto';
 
 @Injectable()
 export class QuizzesService {
@@ -91,5 +92,28 @@ export class QuizzesService {
         }
 
         return quiz;
+    }
+    async takeQuiz(quizId: number, studentId: number) {
+        try {
+            return await this.prisma.quizAttempt.create({
+                data: {
+                    quiz: { connect: { id: quizId } },
+                    student: { connect: { id: studentId } },
+                    score: 0, // Initialize score; adjust as needed
+                },
+            });
+        } catch (error) {
+            throw new BadRequestException('Failed to start quiz');
+        }
+    }
+    async submitAnswers(quizId: number, studentId: number, answers: SubmitAnswersDto) {
+        // Logic to save answers and calculate score if necessary
+        try {
+            // Implement answer saving logic here
+            // For demonstration purposes
+            return { message: 'Answers submitted successfully' };
+        } catch (error) {
+            throw new BadRequestException('Failed to submit answers');
+        }
     }
 }

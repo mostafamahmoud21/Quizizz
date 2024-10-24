@@ -12,6 +12,8 @@ import {
 import { QuizzesService } from './quizzes.service';
 import { CreateQuizDto } from './dto/create-quiz.dto';
 import { UpdateQuizDto } from './dto/update-quiz.dto';
+import { TakeQuizDto } from './dto/take-quiz.dto';
+import { SubmitAnswersDto } from './dto/submit-answers.dto';
 import { JwtMiddleware } from 'src/auth/middleware/jwt.middleware';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Role } from '../auth/enums/roles.enum';
@@ -29,6 +31,24 @@ export class QuizzesController {
   create(@Req() req: Request, @Body() createQuizDto: CreateQuizDto) {
     const instructorId = (req.user as User).id;
     return this.quizzesService.createQuiz(createQuizDto, instructorId);
+  }
+
+  @Post(':quizId/take')
+  @UseGuards(JwtMiddleware)
+  async takeQuiz(@Param('quizId') quizId: string, @Req() req: Request) {
+    const studentId = (req.user as User).id;
+    return this.quizzesService.takeQuiz(+quizId, studentId);
+  }
+
+  @Post(':quizId/answers')
+  @UseGuards(JwtMiddleware)
+  async submitAnswers(
+    @Param('quizId') quizId: string,
+    @Body() submitAnswersDto: SubmitAnswersDto,
+    @Req() req: Request
+  ) {
+    const studentId = (req.user as User).id;
+    return this.quizzesService.submitAnswers(+quizId, studentId, submitAnswersDto);
   }
 
   @Get()
