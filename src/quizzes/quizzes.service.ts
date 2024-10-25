@@ -6,6 +6,7 @@ import {
 import { PrismaClient } from '@prisma/client';
 import { CreateQuizDto } from './dto/create-quiz.dto';
 import { UpdateQuizDto } from './dto/update-quiz.dto';
+import { SubmitAnswersDto } from './dto/submit-answers.dto';
 
 @Injectable()
 export class QuizzesService {
@@ -17,6 +18,7 @@ export class QuizzesService {
                 data: {
                     title: createQuizDto.title,
                     description: createQuizDto.description,
+                    type: createQuizDto.type,
                     instructorId: instructorId,
                 },
             });
@@ -49,6 +51,9 @@ export class QuizzesService {
         if (updateQuizDto.title) {
             updatedData.title = updateQuizDto.title;
         }
+        if (updateQuizDto.type) {
+            updatedData.type = updateQuizDto.type;
+        }
         if (updateQuizDto.description) {
             updatedData.description = updateQuizDto.description;
         }
@@ -62,7 +67,6 @@ export class QuizzesService {
             throw new BadRequestException(`Failed to update quiz with ID ${id}`);
         }
     }
-
 
     async deleteQuiz(id: number, instructorId: number) {
         const quiz = await this.ensureQuizExists(id);
@@ -91,5 +95,28 @@ export class QuizzesService {
         }
 
         return quiz;
+    }
+
+    async takeQuiz(quizId: number, studentId: number) {
+        try {
+            return await this.prisma.quizAttempt.create({
+                data: {
+                    quiz: { connect: { id: quizId } },
+                    student: { connect: { id: studentId } },
+                    score: 0, // Initialize score; adjust as needed
+                },
+            });
+        } catch (error) {
+            throw new BadRequestException('Failed to start quiz');
+        }
+    }
+
+    async submitAnswers(quizId: number, studentId: number, answers: SubmitAnswersDto) {
+        try {
+            // Implement answer saving logic here
+            return { message: 'Answers submitted successfully' };
+        } catch (error) {
+            throw new BadRequestException('Failed to submit answers');
+        }
     }
 }

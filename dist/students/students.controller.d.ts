@@ -4,9 +4,9 @@ export declare class StudentsController {
     private readonly studentsService;
     constructor(studentsService: StudentsService);
     findAllCourses(req: Request): Promise<{
-        id: number;
         title: string;
         description: string;
+        id: number;
         instructorId: number;
         createdAt: Date;
         updatedAt: Date;

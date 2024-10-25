@@ -1,6 +1,7 @@
 import { QuizzesService } from './quizzes.service';
 import { CreateQuizDto } from './dto/create-quiz.dto';
 import { UpdateQuizDto } from './dto/update-quiz.dto';
+import { SubmitAnswersDto } from './dto/submit-answers.dto';
 import { Request } from 'express';
 export declare class QuizzesController {
     private readonly quizzesService;
@@ -12,6 +13,16 @@ export declare class QuizzesController {
         instructorId: number;
         createdAt: Date;
         updatedAt: Date;
+    }>;
+    takeQuiz(quizId: string, req: Request): Promise<{
+        id: number;
+        quizId: number;
+        studentId: number;
+        score: number;
+        dateTaken: Date;
+    }>;
+    submitAnswers(quizId: string, submitAnswersDto: SubmitAnswersDto, req: Request): Promise<{
+        message: string;
     }>;
     findAll(): Promise<{
         title: string;

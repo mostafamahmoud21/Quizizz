@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { CreateQuizDto } from './dto/create-quiz.dto';
 import { UpdateQuizDto } from './dto/update-quiz.dto';
+import { SubmitAnswersDto } from './dto/submit-answers.dto';
 export declare class QuizzesService {
     private readonly prisma;
     constructor(prisma: PrismaClient);
@@ -40,4 +41,14 @@ export declare class QuizzesService {
         message: string;
     }>;
     private ensureQuizExists;
+    takeQuiz(quizId: number, studentId: number): Promise<{
+        id: number;
+        quizId: number;
+        studentId: number;
+        score: number;
+        dateTaken: Date;
+    }>;
+    submitAnswers(quizId: number, studentId: number, answers: SubmitAnswersDto): Promise<{
+        message: string;
+    }>;
 }

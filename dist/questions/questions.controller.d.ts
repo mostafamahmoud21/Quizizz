@@ -7,68 +7,42 @@ export declare class QuestionsController {
     constructor(questionsService: QuestionsService);
     createQuestion(req: Request, quizId: number, createQuestionDto: CreateQuestionDto): Promise<{
         id: number;
-<<<<<<< HEAD
-        text: string;
-        quizId: number;
-        level: import(".prisma/client").$Enums.Levels;
-=======
->>>>>>> 7a9aedb1b08defe3c0d31199ba090d340ddc0f16
         createdAt: Date;
         updatedAt: Date;
-        text: string;
         quizId: number;
+        text: string;
+        level: import(".prisma/client").$Enums.Levels;
     }>;
-<<<<<<< HEAD
     getQuestions(quizId: number): Promise<{
         id: number;
-        text: string;
+        createdAt: Date;
+        updatedAt: Date;
         quizId: number;
+        text: string;
         level: import(".prisma/client").$Enums.Levels;
-=======
-    update(id: number, updateQuestionDto: UpdateQuestionDto): Promise<{
-        id: number;
-        createdAt: Date;
-        updatedAt: Date;
-        text: string;
-        quizId: number;
-    }>;
-    DeleteQuestion(id: number): Promise<{
-        id: number;
-        createdAt: Date;
-        updatedAt: Date;
-        text: string;
-        quizId: number;
-    }>;
-    QuestionWithQuizId(quizId: number): Promise<{
-        id: number;
->>>>>>> 7a9aedb1b08defe3c0d31199ba090d340ddc0f16
-        createdAt: Date;
-        updatedAt: Date;
-        text: string;
-        quizId: number;
     }[]>;
     getQuestionById(quizId: number, questionId: number): Promise<{
         id: number;
-        text: string;
-        quizId: number;
-        level: import(".prisma/client").$Enums.Levels;
         createdAt: Date;
         updatedAt: Date;
+        quizId: number;
+        text: string;
+        level: import(".prisma/client").$Enums.Levels;
     }>;
     updateQuestion(req: Request, quizId: number, questionId: number, updateQuestionDto: UpdateQuestionDto): Promise<{
         id: number;
-        text: string;
-        quizId: number;
-        level: import(".prisma/client").$Enums.Levels;
         createdAt: Date;
         updatedAt: Date;
+        quizId: number;
+        text: string;
+        level: import(".prisma/client").$Enums.Levels;
     }>;
     deleteQuestion(req: Request, quizId: number, questionId: number): Promise<{
         id: number;
-        text: string;
-        quizId: number;
-        level: import(".prisma/client").$Enums.Levels;
         createdAt: Date;
         updatedAt: Date;
+        quizId: number;
+        text: string;
+        level: import(".prisma/client").$Enums.Levels;
     }>;
 }

@@ -17,6 +17,7 @@ const common_1 = require("@nestjs/common");
 const quizzes_service_1 = require("./quizzes.service");
 const create_quiz_dto_1 = require("./dto/create-quiz.dto");
 const update_quiz_dto_1 = require("./dto/update-quiz.dto");
+const submit_answers_dto_1 = require("./dto/submit-answers.dto");
 const jwt_middleware_1 = require("../auth/middleware/jwt.middleware");
 const roles_guard_1 = require("../auth/guards/roles.guard");
 const roles_enum_1 = require("../auth/enums/roles.enum");
@@ -28,6 +29,14 @@ let QuizzesController = class QuizzesController {
     create(req, createQuizDto) {
         const instructorId = req.user.id;
         return this.quizzesService.createQuiz(createQuizDto, instructorId);
+    }
+    async takeQuiz(quizId, req) {
+        const studentId = req.user.id;
+        return this.quizzesService.takeQuiz(+quizId, studentId);
+    }
+    async submitAnswers(quizId, submitAnswersDto, req) {
+        const studentId = req.user.id;
+        return this.quizzesService.submitAnswers(+quizId, studentId, submitAnswersDto);
     }
     findAll() {
         return this.quizzesService.getQuizzes();
@@ -55,6 +64,25 @@ __decorate([
     __metadata("design:paramtypes", [Object, create_quiz_dto_1.CreateQuizDto]),
     __metadata("design:returntype", void 0)
 ], QuizzesController.prototype, "create", null);
+__decorate([
+    (0, common_1.Post)(':quizId/take'),
+    (0, common_1.UseGuards)(jwt_middleware_1.JwtMiddleware),
+    __param(0, (0, common_1.Param)('quizId')),
+    __param(1, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", Promise)
+], QuizzesController.prototype, "takeQuiz", null);
+__decorate([
+    (0, common_1.Post)(':quizId/answers'),
+    (0, common_1.UseGuards)(jwt_middleware_1.JwtMiddleware),
+    __param(0, (0, common_1.Param)('quizId')),
+    __param(1, (0, common_1.Body)()),
+    __param(2, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, submit_answers_dto_1.SubmitAnswersDto, Object]),
+    __metadata("design:returntype", Promise)
+], QuizzesController.prototype, "submitAnswers", null);
 __decorate([
     (0, common_1.Get)(),
     (0, common_1.UseGuards)(jwt_middleware_1.JwtMiddleware, roles_guard_1.RolesGuard),

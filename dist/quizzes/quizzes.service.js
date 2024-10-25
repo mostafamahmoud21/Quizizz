@@ -87,6 +87,28 @@ let QuizzesService = class QuizzesService {
         }
         return quiz;
     }
+    async takeQuiz(quizId, studentId) {
+        try {
+            return await this.prisma.quizAttempt.create({
+                data: {
+                    quiz: { connect: { id: quizId } },
+                    student: { connect: { id: studentId } },
+                    score: 0,
+                },
+            });
+        }
+        catch (error) {
+            throw new common_1.BadRequestException('Failed to start quiz');
+        }
+    }
+    async submitAnswers(quizId, studentId, answers) {
+        try {
+            return { message: 'Answers submitted successfully' };
+        }
+        catch (error) {
+            throw new common_1.BadRequestException('Failed to submit answers');
+        }
+    }
 };
 exports.QuizzesService = QuizzesService;
 exports.QuizzesService = QuizzesService = __decorate([

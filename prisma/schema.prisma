@@ -32,6 +32,8 @@ model Student {
 
   // Relations
   enrollments Enrollment[] // Many-to-many relationship between students and courses
+
+  QuizAttempt QuizAttempt[]
 }
 
 enum Role {
@@ -69,11 +71,14 @@ model Quiz {
   description  String
   instructorId Int
   instructor   Instructor @relation(fields: [instructorId], references: [id])
+  type         Types
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
 
   // Relations
   questions Question[]
+
+  QuizAttempt QuizAttempt[]
 }
 
 model Question {
@@ -90,12 +95,30 @@ model Question {
 }
 
 model Choice {
-  id         Int      @id @default(autoincrement())
-  text       String
+  id   Int    @id @default(autoincrement())
+  text String
+
   questionId Int
   question   Question @relation(fields: [questionId], references: [id])
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+}
+
+model QuizAttempt {
+  id        Int      @id @default(autoincrement())
+  quizId    Int
+  studentId Int
+  score     Int
+  dateTaken DateTime @default(now())
+  quiz      Quiz     @relation(fields: [quizId], references: [id])
+  student   Student  @relation(fields: [studentId], references: [id])
+
+  @@unique([quizId, studentId]) // Composite unique constraint
+}
+
+enum Types {
+  Quiz
+  Final
 }
 
 enum Levels {

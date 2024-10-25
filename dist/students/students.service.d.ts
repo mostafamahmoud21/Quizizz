@@ -3,9 +3,9 @@ export declare class StudentsService {
     private readonly prisma;
     constructor(prisma: PrismaClient);
     findAllCoursesServices(): Promise<{
-        id: number;
         title: string;
         description: string;
+        id: number;
         instructorId: number;
         createdAt: Date;
         updatedAt: Date;
