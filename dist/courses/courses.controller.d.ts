@@ -57,4 +57,11 @@ export declare class CoursesController {
     remove(req: Request, id: string): Promise<{
         message: string;
     }>;
+    assignStudentToCourse(req: Request, courseId: number, studentId: number): Promise<{
+        courseId: number;
+        id: number;
+        createdAt: Date;
+        updatedAt: Date;
+        studentId: number;
+    }>;
 }

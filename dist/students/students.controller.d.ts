@@ -4,9 +4,9 @@ export declare class StudentsController {
     private readonly studentsService;
     constructor(studentsService: StudentsService);
     findAllCourses(req: Request): Promise<{
+        id: number;
         title: string;
         description: string;
-        id: number;
         instructorId: number;
         createdAt: Date;
         updatedAt: Date;
@@ -30,4 +30,14 @@ export declare class StudentsController {
             name: string;
         };
     }>;
+    getStudentExams(req: Request): Promise<{
+        id: number;
+        title: string;
+        description: string;
+        instructorId: number;
+        createdAt: Date;
+        updatedAt: Date;
+        courseId: number;
+        type: import(".prisma/client").$Enums.Types;
+    }[]>;
 }

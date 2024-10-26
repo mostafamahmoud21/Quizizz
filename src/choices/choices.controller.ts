@@ -19,12 +19,12 @@ import { Roles } from 'src/auth/decorators/roles.decorator';
 import { User } from 'src/auth/interfaces/user.interface';
 import { Request } from 'express';
 
-@Controller('choices')
+@Controller('questions')
 export class ChoicesController {
   constructor(private readonly choicesService: ChoicesService) {}
 
   //** adding choices to a question
-  @Post('questions/:questionId')
+  @Post(':questionId/choices')
   @UseGuards(JwtMiddleware, RolesGuard)
   @Roles(Role.INSTRUCTOR)
   async createChoice(
@@ -32,8 +32,7 @@ export class ChoicesController {
     @Req() req: Request,
     @Body() createChoiceDto: createChoiceDto,
   ) {
-     const instructorId = (req.user as User).id;
-    //const instructorId = 1;
+    const instructorId = (req.user as User).id;
     return this.choicesService.createChoice(
       questionId,
       instructorId,
@@ -41,17 +40,16 @@ export class ChoicesController {
     );
   }
   //** editing a choice
-  @Put(':id/questions/:questionId')
+  @Put(':questionId/choices/:id')
   @UseGuards(JwtMiddleware, RolesGuard)
   @Roles(Role.INSTRUCTOR)
   async updateChoice(
-    @Param('id', ParseIntPipe) id: number,
     @Param('questionId', ParseIntPipe) questionId: number,
+    @Param('id', ParseIntPipe) id: number,
     @Req() req: Request,
     @Body() updateChoiceDto: updateChoiceDto,
   ) {
-     const instructorId = (req.user as User).id;
-    //const instructorId = 1;
+    const instructorId = (req.user as User).id;
     return this.choicesService.updateChoice(
       id,
       questionId,
@@ -60,21 +58,16 @@ export class ChoicesController {
     );
   }
 
-   //** delete a choice
-   @Delete(':id/questions/:questionId')
-   @UseGuards(JwtMiddleware, RolesGuard)
+  //** delete a choice
+  @Delete(':questionId/choices/:id')
+  @UseGuards(JwtMiddleware, RolesGuard)
   @Roles(Role.INSTRUCTOR)
-   async deleteChoice(
-     @Param('id', ParseIntPipe) id: number,
-     @Param('questionId', ParseIntPipe) questionId: number,
-     @Req() req: Request,
-   ) {
-      const instructorId = (req.user as User).id;
-     //const instructorId = 1;
-     return this.choicesService.deleteChoice(
-       id,
-       questionId,
-       instructorId,
-     );
-   }
+  async deleteChoice(
+    @Param('id', ParseIntPipe) id: number,
+    @Param('questionId', ParseIntPipe) questionId: number,
+    @Req() req: Request,
+  ) {
+    const instructorId = (req.user as User).id;
+    return this.choicesService.deleteChoice(id, questionId, instructorId);
+  }
 }

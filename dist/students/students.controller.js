@@ -37,6 +37,10 @@ let StudentsController = class StudentsController {
     findCourse(id) {
         return this.studentsService.findCourseServices(+id);
     }
+    async getStudentExams(req) {
+        const studentId = req.user.id;
+        return this.studentsService.getStudentExams(studentId);
+    }
 };
 exports.StudentsController = StudentsController;
 __decorate([
@@ -76,6 +80,15 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", void 0)
 ], StudentsController.prototype, "findCourse", null);
+__decorate([
+    (0, common_1.Get)('exams'),
+    (0, common_1.UseGuards)(jwt_middleware_1.JwtMiddleware, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)(roles_enum_1.Role.STUDENT),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], StudentsController.prototype, "getStudentExams", null);
 exports.StudentsController = StudentsController = __decorate([
     (0, common_1.Controller)('/students'),
     __metadata("design:paramtypes", [students_service_1.StudentsService])

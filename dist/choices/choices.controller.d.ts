@@ -12,7 +12,7 @@ export declare class ChoicesController {
         text: string;
         questionId: number;
     }>;
-    updateChoice(id: number, questionId: number, req: Request, updateChoiceDto: updateChoiceDto): Promise<{
+    updateChoice(questionId: number, id: number, req: Request, updateChoiceDto: updateChoiceDto): Promise<{
         id: number;
         createdAt: Date;
         updatedAt: Date;

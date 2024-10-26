@@ -10,15 +10,15 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CoursesService = void 0;
+const prisma_service_1 = require("../prisma/prisma.service");
 const common_1 = require("@nestjs/common");
-const client_1 = require("@prisma/client");
 let CoursesService = class CoursesService {
-    constructor(prisma) {
-        this.prisma = prisma;
+    constructor(PrismaService) {
+        this.PrismaService = PrismaService;
     }
     async createCourseServices(createCourseDto, instructorId) {
         try {
-            const course = await this.prisma.course.create({
+            const course = await this.PrismaService.course.create({
                 data: {
                     title: createCourseDto.title,
                     description: createCourseDto.description,
@@ -38,7 +38,7 @@ let CoursesService = class CoursesService {
         }
     }
     async findAllCoursesServices(instructorId) {
-        return await this.prisma.course.findMany({
+        return await this.PrismaService.course.findMany({
             where: { instructorId },
             select: {
                 title: true,
@@ -55,7 +55,7 @@ let CoursesService = class CoursesService {
         });
     }
     async findOne(id) {
-        const course = await this.prisma.course.findUnique({
+        const course = await this.PrismaService.course.findUnique({
             where: { id },
             include: {
                 instructor: {
@@ -72,7 +72,7 @@ let CoursesService = class CoursesService {
         return course;
     }
     async update(id, updateCourseDto, instructorId) {
-        const course = await this.prisma.course.findUnique({ where: { id } });
+        const course = await this.PrismaService.course.findUnique({ where: { id } });
         if (!course) {
             throw new common_1.HttpException('Course not found', common_1.HttpStatus.NOT_FOUND);
         }
@@ -80,7 +80,7 @@ let CoursesService = class CoursesService {
             throw new common_1.HttpException('You are not authorized to update this course', common_1.HttpStatus.FORBIDDEN);
         }
         try {
-            const updatedCourse = await this.prisma.course.update({
+            const updatedCourse = await this.PrismaService.course.update({
                 where: { id },
                 data: {
                     title: updateCourseDto.title,
@@ -100,7 +100,7 @@ let CoursesService = class CoursesService {
         }
     }
     async remove(id, instructorId) {
-        const course = await this.prisma.course.findUnique({ where: { id } });
+        const course = await this.PrismaService.course.findUnique({ where: { id } });
         if (!course) {
             throw new common_1.HttpException('Course not found', common_1.HttpStatus.NOT_FOUND);
         }
@@ -108,7 +108,7 @@ let CoursesService = class CoursesService {
             throw new common_1.HttpException('You are not authorized to delete this course', common_1.HttpStatus.FORBIDDEN);
         }
         try {
-            await this.prisma.course.delete({
+            await this.PrismaService.course.delete({
                 where: { id },
             });
             return { message: 'Course removed successfully' };
@@ -120,10 +120,34 @@ let CoursesService = class CoursesService {
             }, common_1.HttpStatus.BAD_REQUEST);
         }
     }
+    async assignStudentToCourse(instructorId, courseId, studentId) {
+        const course = await this.PrismaService.course.findUnique({
+            where: { id: courseId },
+        });
+        if (!course) {
+            throw new common_1.NotFoundException(`Course with ID ${courseId} not found!`);
+        }
+        if (course.instructorId !== instructorId) {
+            throw new common_1.ForbiddenException('You do not have permission to assign students to this course!');
+        }
+        const student = await this.PrismaService.student.findUnique({
+            where: { id: studentId },
+        });
+        if (!student) {
+            throw new common_1.NotFoundException(`Student with ID ${studentId} not found!`);
+        }
+        const enrollment = await this.PrismaService.enrollment.create({
+            data: {
+                courseId,
+                studentId,
+            },
+        });
+        return enrollment;
+    }
 };
 exports.CoursesService = CoursesService;
 exports.CoursesService = CoursesService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [client_1.PrismaClient])
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
 ], CoursesService);
 //# sourceMappingURL=courses.service.js.map

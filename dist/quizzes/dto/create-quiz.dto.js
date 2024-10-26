@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateQuizDto = void 0;
 const class_validator_1 = require("class-validator");
+const types_enum_1 = require("../../auth/enums/types.enum");
 class CreateQuizDto {
 }
 exports.CreateQuizDto = CreateQuizDto;
@@ -23,7 +24,16 @@ __decorate([
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateQuizDto.prototype, "type", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)(),
     (0, class_validator_1.MaxLength)(500),
     __metadata("design:type", String)
 ], CreateQuizDto.prototype, "description", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", Number)
+], CreateQuizDto.prototype, "courseId", void 0);
 //# sourceMappingURL=create-quiz.dto.js.map

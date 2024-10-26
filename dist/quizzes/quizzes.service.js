@@ -22,6 +22,8 @@ let QuizzesService = class QuizzesService {
                 data: {
                     title: createQuizDto.title,
                     description: createQuizDto.description,
+                    type: createQuizDto.type,
+                    courseId: createQuizDto.courseId,
                     instructorId: instructorId,
                 },
             });
@@ -49,6 +51,9 @@ let QuizzesService = class QuizzesService {
         const updatedData = {};
         if (updateQuizDto.title) {
             updatedData.title = updateQuizDto.title;
+        }
+        if (updateQuizDto.type) {
+            updatedData.type = updateQuizDto.type;
         }
         if (updateQuizDto.description) {
             updatedData.description = updateQuizDto.description;

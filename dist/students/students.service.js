@@ -28,7 +28,7 @@ let StudentsService = class StudentsService {
             data: {
                 courseId: id,
                 studentId: studentId,
-            }
+            },
         });
         return {
             message: 'Enrolled successfully',
@@ -44,12 +44,12 @@ let StudentsService = class StudentsService {
                         description: true,
                         instructor: {
                             select: {
-                                name: true
-                            }
-                        }
+                                name: true,
+                            },
+                        },
                     },
                 },
-            }
+            },
         });
     }
     async findCourseServices(id) {
@@ -65,6 +65,27 @@ let StudentsService = class StudentsService {
                 },
             },
         });
+    }
+    async getStudentExams(studentId) {
+        const student = await this.prisma.student.findUnique({
+            where: { id: studentId },
+            include: {
+                enrollments: {
+                    include: {
+                        course: {
+                            include: {
+                                quizzes: true,
+                            },
+                        },
+                    },
+                },
+            },
+        });
+        if (!student) {
+            throw new common_1.NotFoundException(`Student with ID ${studentId} not found!`);
+        }
+        const quizzes = student.enrollments.flatMap((enrollment) => enrollment.course.quizzes);
+        return quizzes;
     }
 };
 exports.StudentsService = StudentsService;

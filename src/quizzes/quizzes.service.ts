@@ -19,6 +19,7 @@ export class QuizzesService {
                     title: createQuizDto.title,
                     description: createQuizDto.description,
                     type: createQuizDto.type,
+                    courseId:createQuizDto.courseId,
                     instructorId: instructorId,
                 },
             });

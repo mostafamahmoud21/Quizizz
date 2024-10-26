@@ -12,7 +12,7 @@ export class StudentsController {
 
   @Get('/courses')
   @UseGuards(JwtMiddleware, RolesGuard)
-  @Roles(Role.STUDENT||Role.INSTRUCTOR)
+  @Roles(Role.STUDENT || Role.INSTRUCTOR)
   findAllCourses(@Req() req: Request) {
     return this.studentsService.findAllCoursesServices();
   }
@@ -36,7 +36,15 @@ export class StudentsController {
   @Get('/course/:id')
   @UseGuards(JwtMiddleware, RolesGuard)
   @Roles(Role.STUDENT)
-  findCourse(@Param('id') id:number) {
+  findCourse(@Param('id') id: number) {
     return this.studentsService.findCourseServices(+id);
+  }
+  // ** get student exams
+  @Get('exams')
+  @UseGuards(JwtMiddleware, RolesGuard)
+  @Roles(Role.STUDENT)
+  async getStudentExams(@Req() req: Request) {
+    const studentId = (req.user as User).id;
+    return this.studentsService.getStudentExams(studentId);
   }
 }

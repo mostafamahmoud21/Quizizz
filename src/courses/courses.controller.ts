@@ -51,4 +51,17 @@ export class CoursesController {
     const instructorId = (req.user as User).id;
     return this.coursesService.remove(+id, instructorId);
   }
+
+  //** assign student to course
+  @Post(':courseId/students/:studentId')
+  @UseGuards(JwtMiddleware, RolesGuard)
+  @Roles(Role.INSTRUCTOR)
+  async assignStudentToCourse(
+    @Req() req: Request,
+    @Param('courseId') courseId: number,
+    @Param('studentId') studentId: number,
+  ) {
+    const instructorId = (req.user as User).id;
+    return this.coursesService.assignStudentToCourse(instructorId, courseId, studentId);
+  }
 }

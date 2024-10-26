@@ -52,6 +52,7 @@ model Course {
 
   // Relations
   enrollments Enrollment[] // Many-to-many relationship with students
+  quizzes     Quiz[]
 }
 
 model Enrollment {
@@ -71,13 +72,14 @@ model Quiz {
   description  String
   instructorId Int
   instructor   Instructor @relation(fields: [instructorId], references: [id])
+  courseId     Int
+  course       Course     @relation(fields: [courseId], references: [id])
   type         Types
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
 
   // Relations
-  questions Question[]
-
+  questions   Question[]
   QuizAttempt QuizAttempt[]
 }
 

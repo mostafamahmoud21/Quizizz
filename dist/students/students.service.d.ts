@@ -3,9 +3,9 @@ export declare class StudentsService {
     private readonly prisma;
     constructor(prisma: PrismaClient);
     findAllCoursesServices(): Promise<{
+        id: number;
         title: string;
         description: string;
-        id: number;
         instructorId: number;
         createdAt: Date;
         updatedAt: Date;
@@ -29,4 +29,14 @@ export declare class StudentsService {
             name: string;
         };
     }>;
+    getStudentExams(studentId: number): Promise<{
+        id: number;
+        title: string;
+        description: string;
+        instructorId: number;
+        createdAt: Date;
+        updatedAt: Date;
+        courseId: number;
+        type: import(".prisma/client").$Enums.Types;
+    }[]>;
 }

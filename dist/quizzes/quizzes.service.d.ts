@@ -7,7 +7,9 @@ export declare class QuizzesService {
     constructor(prisma: PrismaClient);
     createQuiz(createQuizDto: CreateQuizDto, instructorId: number): Promise<{
         title: string;
+        type: import(".prisma/client").$Enums.Types;
         description: string;
+        courseId: number;
         id: number;
         instructorId: number;
         createdAt: Date;
@@ -15,7 +17,9 @@ export declare class QuizzesService {
     }>;
     getQuizzes(): Promise<{
         title: string;
+        type: import(".prisma/client").$Enums.Types;
         description: string;
+        courseId: number;
         id: number;
         instructorId: number;
         createdAt: Date;
@@ -23,7 +27,9 @@ export declare class QuizzesService {
     }[]>;
     getQuizById(id: number): Promise<{
         title: string;
+        type: import(".prisma/client").$Enums.Types;
         description: string;
+        courseId: number;
         id: number;
         instructorId: number;
         createdAt: Date;
@@ -31,7 +37,9 @@ export declare class QuizzesService {
     }>;
     updateQuiz(id: number, updateQuizDto: UpdateQuizDto, instructorId: number): Promise<{
         title: string;
+        type: import(".prisma/client").$Enums.Types;
         description: string;
+        courseId: number;
         id: number;
         instructorId: number;
         createdAt: Date;

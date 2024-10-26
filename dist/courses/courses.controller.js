@@ -44,6 +44,10 @@ let CoursesController = class CoursesController {
         const instructorId = req.user.id;
         return this.coursesService.remove(+id, instructorId);
     }
+    async assignStudentToCourse(req, courseId, studentId) {
+        const instructorId = req.user.id;
+        return this.coursesService.assignStudentToCourse(instructorId, courseId, studentId);
+    }
 };
 exports.CoursesController = CoursesController;
 __decorate([
@@ -95,6 +99,17 @@ __decorate([
     __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", void 0)
 ], CoursesController.prototype, "remove", null);
+__decorate([
+    (0, common_1.Post)(':courseId/students/:studentId'),
+    (0, common_1.UseGuards)(jwt_middleware_1.JwtMiddleware, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)(roles_enum_1.Role.INSTRUCTOR),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Param)('courseId')),
+    __param(2, (0, common_1.Param)('studentId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Number, Number]),
+    __metadata("design:returntype", Promise)
+], CoursesController.prototype, "assignStudentToCourse", null);
 exports.CoursesController = CoursesController = __decorate([
     (0, common_1.Controller)('courses'),
     __metadata("design:paramtypes", [courses_service_1.CoursesService])

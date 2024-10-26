@@ -1,9 +1,9 @@
+import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
-import { PrismaClient } from '@prisma/client';
 export declare class CoursesService {
-    private readonly prisma;
-    constructor(prisma: PrismaClient);
+    private readonly PrismaService;
+    constructor(PrismaService: PrismaService);
     createCourseServices(createCourseDto: CreateCourseDto, instructorId: number): Promise<{
         course: {
             title: string;
@@ -55,5 +55,12 @@ export declare class CoursesService {
     }>;
     remove(id: number, instructorId: number): Promise<{
         message: string;
+    }>;
+    assignStudentToCourse(instructorId: number, courseId: number, studentId: number): Promise<{
+        courseId: number;
+        id: number;
+        createdAt: Date;
+        updatedAt: Date;
+        studentId: number;
     }>;
 }

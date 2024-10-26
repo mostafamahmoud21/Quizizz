@@ -9,10 +9,13 @@ export class CreateQuizDto {
 
   @IsNotEmpty()
   @IsString()
-  type: Types
+  type: Types;
 
   @IsNotEmpty()
   @IsString()
   @MaxLength(500)
   description: string;
+
+  @IsNotEmpty()
+  courseId: number;
 }
