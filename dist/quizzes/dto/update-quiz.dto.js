@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UpdateQuizDto = void 0;
 const class_validator_1 = require("class-validator");
+const types_enum_1 = require("../../auth/enums/types.enum");
 class UpdateQuizDto {
 }
 exports.UpdateQuizDto = UpdateQuizDto;
@@ -20,6 +21,10 @@ __decorate([
     (0, class_validator_1.MaxLength)(100),
     __metadata("design:type", String)
 ], UpdateQuizDto.prototype, "title", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], UpdateQuizDto.prototype, "type", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),

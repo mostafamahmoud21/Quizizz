@@ -63,20 +63,12 @@ export class CoursesService {
       },
     });
 
-    if (!course) {
-      throw new HttpException('Course not found', HttpStatus.NOT_FOUND);
-    }
-
     return course;
   }
 
   async update(id: number, updateCourseDto: UpdateCourseDto, instructorId: number) {
     const course = await this.prisma.course.findUnique({ where: { id } });
     
-    if (!course) {
-      throw new HttpException('Course not found', HttpStatus.NOT_FOUND);
-    }
-
     if (course.instructorId !== instructorId) {
       throw new HttpException('You are not authorized to update this course', HttpStatus.FORBIDDEN);
     }
@@ -107,11 +99,7 @@ export class CoursesService {
 
   async remove(id: number, instructorId: number) {
     const course = await this.prisma.course.findUnique({ where: { id } });
-    
-    if (!course) {
-      throw new HttpException('Course not found', HttpStatus.NOT_FOUND);
-    }
-
+  
     
     if (course.instructorId !== instructorId) {
       throw new HttpException('You are not authorized to delete this course', HttpStatus.FORBIDDEN);

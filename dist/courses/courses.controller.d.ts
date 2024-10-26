@@ -7,9 +7,9 @@ export declare class CoursesController {
     constructor(coursesService: CoursesService);
     createCourse(req: Request, createCourseDto: CreateCourseDto): Promise<{
         course: {
+            id: number;
             title: string;
             description: string;
-            id: number;
             instructorId: number;
             createdAt: Date;
             updatedAt: Date;
@@ -28,24 +28,24 @@ export declare class CoursesController {
             email: string;
         };
     }[]>;
-    findOne(id: string): Promise<{
+    findOne(id: number): Promise<{
         instructor: {
             name: string;
             email: string;
         };
     } & {
+        id: number;
         title: string;
         description: string;
-        id: number;
         instructorId: number;
         createdAt: Date;
         updatedAt: Date;
     }>;
-    update(req: Request, id: string, updateCourseDto: UpdateCourseDto): Promise<{
+    update(req: Request, id: number, updateCourseDto: UpdateCourseDto): Promise<{
         updatedCourse: {
+            id: number;
             title: string;
             description: string;
-            id: number;
             instructorId: number;
             createdAt: Date;
             updatedAt: Date;
@@ -54,7 +54,7 @@ export declare class CoursesController {
             success: string;
         };
     }>;
-    remove(req: Request, id: string): Promise<{
+    remove(req: Request, id: number): Promise<{
         message: string;
     }>;
 }
