@@ -12,14 +12,14 @@ import { SubmitAnswersDto } from './dto/submit-answers.dto';
 export class QuizzesService {
     constructor(private readonly prisma: PrismaClient) { }
 
-    async createQuiz(createQuizDto: CreateQuizDto, instructorId: number) {
+    async createQuiz(courseId:number,createQuizDto: CreateQuizDto, instructorId: number) {
         try {
             return await this.prisma.quiz.create({
                 data: {
                     title: createQuizDto.title,
                     description: createQuizDto.description,
                     type: createQuizDto.type,
-                    courseId:createQuizDto.courseId,
+                    courseId: courseId,
                     instructorId: instructorId,
                 },
             });

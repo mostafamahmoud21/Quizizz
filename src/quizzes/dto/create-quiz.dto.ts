@@ -16,6 +16,6 @@ export class CreateQuizDto {
   @MaxLength(500)
   description: string;
 
-  @IsNotEmpty()
-  courseId: number;
+  // @IsNotEmpty()
+   courseId: number;
 }

@@ -24,12 +24,12 @@ import { Request } from 'express';
 export class QuizzesController {
   constructor(private readonly quizzesService: QuizzesService) { }
 
-  @Post()
+  @Post(':courseId')
   @UseGuards(JwtMiddleware, RolesGuard)
   @Roles(Role.INSTRUCTOR)
-  create(@Req() req: Request, @Body() createQuizDto: CreateQuizDto) {
+  create(@Param('courseId') courseId:number, @Req() req: Request, @Body() createQuizDto: CreateQuizDto) {
       const instructorId = (req.user as User).id;
-      return this.quizzesService.createQuiz(createQuizDto, instructorId);
+      return this.quizzesService.createQuiz(+courseId,createQuizDto, instructorId);
   }
 
   @Post(':quizId/take')
