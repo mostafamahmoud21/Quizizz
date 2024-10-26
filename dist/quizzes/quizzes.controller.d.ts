@@ -7,11 +7,11 @@ export declare class QuizzesController {
     private readonly quizzesService;
     constructor(quizzesService: QuizzesService);
     create(req: Request, createQuizDto: CreateQuizDto): Promise<{
-        id: number;
         title: string;
-        description: string;
-        instructorId: number;
         type: import(".prisma/client").$Enums.Types;
+        description: string;
+        id: number;
+        instructorId: number;
         createdAt: Date;
         updatedAt: Date;
     }>;
@@ -26,29 +26,29 @@ export declare class QuizzesController {
         message: string;
     }>;
     findAll(): Promise<{
-        id: number;
         title: string;
-        description: string;
-        instructorId: number;
         type: import(".prisma/client").$Enums.Types;
+        description: string;
+        id: number;
+        instructorId: number;
         createdAt: Date;
         updatedAt: Date;
     }[]>;
     findOne(id: number): Promise<{
-        id: number;
         title: string;
-        description: string;
-        instructorId: number;
         type: import(".prisma/client").$Enums.Types;
+        description: string;
+        id: number;
+        instructorId: number;
         createdAt: Date;
         updatedAt: Date;
     }>;
     update(id: string, updateQuizDto: UpdateQuizDto, req: Request): Promise<{
-        id: number;
         title: string;
-        description: string;
-        instructorId: number;
         type: import(".prisma/client").$Enums.Types;
+        description: string;
+        id: number;
+        instructorId: number;
         createdAt: Date;
         updatedAt: Date;
     }>;

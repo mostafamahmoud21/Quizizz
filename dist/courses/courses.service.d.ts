@@ -6,9 +6,9 @@ export declare class CoursesService {
     constructor(prisma: PrismaClient);
     createCourseServices(createCourseDto: CreateCourseDto, instructorId: number): Promise<{
         course: {
-            id: number;
             title: string;
             description: string;
+            id: number;
             instructorId: number;
             createdAt: Date;
             updatedAt: Date;
@@ -33,18 +33,18 @@ export declare class CoursesService {
             email: string;
         };
     } & {
-        id: number;
         title: string;
         description: string;
+        id: number;
         instructorId: number;
         createdAt: Date;
         updatedAt: Date;
     }>;
     update(id: number, updateCourseDto: UpdateCourseDto, instructorId: number): Promise<{
         updatedCourse: {
-            id: number;
             title: string;
             description: string;
+            id: number;
             instructorId: number;
             createdAt: Date;
             updatedAt: Date;
