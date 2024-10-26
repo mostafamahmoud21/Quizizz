@@ -36,7 +36,7 @@ export declare class QuizzesController {
         createdAt: Date;
         updatedAt: Date;
     }[]>;
-    findOne(id: string): Promise<{
+    findOne(id: number): Promise<{
         title: string;
         type: import(".prisma/client").$Enums.Types;
         description: string;

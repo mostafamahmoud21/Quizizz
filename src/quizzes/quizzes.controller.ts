@@ -8,6 +8,7 @@ import {
   Delete,
   UseGuards,
   Req,
+  UsePipes,
 } from '@nestjs/common';
 import { QuizzesService } from './quizzes.service';
 import { CreateQuizDto } from './dto/create-quiz.dto';
@@ -19,6 +20,8 @@ import { Role } from '../auth/enums/roles.enum';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { User } from 'src/auth/interfaces/user.interface';
 import { Request } from 'express';
+import { ValidationPipe } from './pipes/numeric-id.pipe';
+import { NotFoundGuard } from './guards/not-found';
 
 @Controller('/api/quizzes')
 export class QuizzesController {
@@ -60,7 +63,9 @@ export class QuizzesController {
   @Get(':id')
   @UseGuards(JwtMiddleware, RolesGuard)
   @Roles(Role.INSTRUCTOR)
-  findOne(@Param('id') id: string) {
+  @UseGuards(NotFoundGuard)
+  @UsePipes(ValidationPipe)
+  findOne(@Param('id') id: number) {
       return this.quizzesService.getQuizById(+id);
   }
 
