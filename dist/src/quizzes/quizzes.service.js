@@ -1,18 +1,22 @@
-import {
-    Injectable,
-    NotFoundException,
-    BadRequestException,
-} from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
-import { CreateQuizDto } from './dto/create-quiz.dto';
-import { UpdateQuizDto } from './dto/update-quiz.dto';
-import { SubmitAnswersDto } from './dto/submit-answers.dto';
-
-@Injectable()
-export class QuizzesService {
-    constructor(private readonly prisma: PrismaClient) { }
-
-    async createQuiz(courseId: number, createQuizDto: CreateQuizDto, instructorId: number) {
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.QuizzesService = void 0;
+const common_1 = require("@nestjs/common");
+const client_1 = require("@prisma/client");
+let QuizzesService = class QuizzesService {
+    constructor(prisma) {
+        this.prisma = prisma;
+    }
+    async createQuiz(courseId, createQuizDto, instructorId) {
         try {
             return await this.prisma.quiz.create({
                 data: {
@@ -23,32 +27,28 @@ export class QuizzesService {
                     courseId: courseId
                 },
             });
-        } catch (error) {
-            throw new BadRequestException('Failed to create quiz');
+        }
+        catch (error) {
+            throw new common_1.BadRequestException('Failed to create quiz');
         }
     }
-
     async getQuizzes() {
         try {
             return await this.prisma.quiz.findMany();
-        } catch (error) {
-            throw new BadRequestException('Failed to retrieve quizzes');
+        }
+        catch (error) {
+            throw new common_1.BadRequestException('Failed to retrieve quizzes');
         }
     }
-
-    async getQuizById(id: number) {
+    async getQuizById(id) {
         return this.ensureQuizExists(id);
     }
-
-    async updateQuiz(id: number, updateQuizDto: UpdateQuizDto, instructorId: number) {
+    async updateQuiz(id, updateQuizDto, instructorId) {
         const quiz = await this.ensureQuizExists(id);
-
         if (quiz.instructorId !== instructorId) {
-            throw new BadRequestException('You do not have permission to update this quiz');
+            throw new common_1.BadRequestException('You do not have permission to update this quiz');
         }
-
-        const updatedData: Partial<UpdateQuizDto> = {};
-
+        const updatedData = {};
         if (updateQuizDto.title) {
             updatedData.title = updateQuizDto.title;
         }
@@ -58,65 +58,56 @@ export class QuizzesService {
         if (updateQuizDto.description) {
             updatedData.description = updateQuizDto.description;
         }
-
         try {
             return await this.prisma.quiz.update({
                 where: { id },
                 data: updatedData,
             });
-        } catch (error) {
-            throw new BadRequestException(`Failed to update quiz with ID ${id}`);
+        }
+        catch (error) {
+            throw new common_1.BadRequestException(`Failed to update quiz with ID ${id}`);
         }
     }
-
-    async deleteQuiz(id: number, instructorId: number) {
+    async deleteQuiz(id, instructorId) {
         const quiz = await this.ensureQuizExists(id);
-
         if (quiz.instructorId !== instructorId) {
-            throw new BadRequestException('You do not have permission to delete this quiz');
+            throw new common_1.BadRequestException('You do not have permission to delete this quiz');
         }
-
         try {
             await this.prisma.quiz.delete({
                 where: { id },
             });
             return { message: `Quiz with ID ${id} has been successfully deleted` };
-        } catch (error) {
-            throw new BadRequestException(`Failed to delete quiz with ID ${id}`);
+        }
+        catch (error) {
+            throw new common_1.BadRequestException(`Failed to delete quiz with ID ${id}`);
         }
     }
-
-    private async ensureQuizExists(id: number) {
+    async ensureQuizExists(id) {
         const quiz = await this.prisma.quiz.findUnique({
             where: { id },
         });
-
         if (!quiz) {
-            throw new NotFoundException(`Quiz with ID ${id} not found`);
+            throw new common_1.NotFoundException(`Quiz with ID ${id} not found`);
         }
-
         return quiz;
     }
-
-    async takeQuiz(quizId: number, studentId: number) {
+    async takeQuiz(quizId, studentId) {
         const quiz = await this.prisma.quiz.findUnique({
             where: { id: quizId },
-        })
+        });
         if (!quiz) {
-            throw new NotFoundException(`Quiz with ID ${quizId} not found`);
+            throw new common_1.NotFoundException(`Quiz with ID ${quizId} not found`);
         }
-
         const existingAttempt = await this.prisma.quizAttempt.findFirst({
             where: {
                 quizId: quizId,
                 studentId: studentId,
             }
-        })
-
+        });
         if (existingAttempt) {
-            throw new BadRequestException('You have already taken this quiz');
+            throw new common_1.BadRequestException('You have already taken this quiz');
         }
-
         try {
             const quizAttempt = await this.prisma.quizAttempt.create({
                 data: {
@@ -125,61 +116,57 @@ export class QuizzesService {
                     score: 0,
                 },
             });
-
             return {
                 message: 'Quiz started successfully',
                 quizAttempt,
             };
-        } catch (error) {
-            throw new BadRequestException('Failed to start quiz');
+        }
+        catch (error) {
+            throw new common_1.BadRequestException('Failed to start quiz');
         }
     }
-
-    async submitQuizAnswers(quizId: number, studentId: number, submitAnswersDto: SubmitAnswersDto) {
+    async submitQuizAnswers(quizId, studentId, submitAnswersDto) {
         const quiz = await this.ensureQuizExists(quizId);
         let scoreStudent = 0;
         const existingAttempt = await this.prisma.quizAttempt.findFirst({
             where: { quizId, studentId },
         });
-
         if (!existingAttempt) {
-            throw new BadRequestException('You need to start the quiz before submitting answers.');
+            throw new common_1.BadRequestException('You need to start the quiz before submitting answers.');
         }
-
         try {
             const answers = submitAnswersDto.answers.map((ans) => ({
                 questionId: ans.questionId,
                 studentId,
                 text: ans.answerText,
             }));
-
             await this.prisma.answer.createMany({ data: answers });
-
             for (const ans of answers) {
                 const correctAnswer = await this.prisma.question.findUnique({
                     where: { id: ans.questionId },
                     select: { correctAnswer: true },
                 });
-
                 if (!correctAnswer) {
-                    throw new NotFoundException(`Question with ID ${ans.questionId} not found`);
+                    throw new common_1.NotFoundException(`Question with ID ${ans.questionId} not found`);
                 }
-
                 if (ans.text === correctAnswer.correctAnswer) {
                     scoreStudent++;
                 }
             }
-
             await this.prisma.quizAttempt.update({
                 where: { id: existingAttempt.id },
                 data: { score: scoreStudent },
             });
-
             return { message: 'Answers submitted successfully', score: scoreStudent };
-        } catch (error) {
-            throw new BadRequestException('Failed to submit answers');
+        }
+        catch (error) {
+            throw new common_1.BadRequestException('Failed to submit answers');
         }
     }
-
-
-}
+};
+exports.QuizzesService = QuizzesService;
+exports.QuizzesService = QuizzesService = __decorate([
+    (0, common_1.Injectable)(),
+    __metadata("design:paramtypes", [client_1.PrismaClient])
+], QuizzesService);
+//# sourceMappingURL=quizzes.service.js.map

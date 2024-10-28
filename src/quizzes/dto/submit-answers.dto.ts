@@ -1,7 +1,17 @@
-import { IsArray, IsNotEmpty } from 'class-validator';
+import { IsArray, ValidateNested, IsNumber, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+
+class AnswerDto {
+  @IsNumber()
+  questionId: number;
+
+  @IsString()
+  answerText: string;
+}
 
 export class SubmitAnswersDto {
-    @IsArray({ message: 'answers must be an array' })
-    @IsNotEmpty({ message: 'answers should not be empty' })
-    answers: Array<{ questionId: number; answer: string }>;
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => AnswerDto)
+  answers: AnswerDto[];
 }

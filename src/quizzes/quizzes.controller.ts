@@ -27,17 +27,18 @@ import { NotFoundGuard } from './guards/not-found';
 export class QuizzesController {
   constructor(private readonly quizzesService: QuizzesService) { }
 
-  @Post()
+  @Post(':courseId')
   @UseGuards(JwtMiddleware, RolesGuard)
   @Roles(Role.INSTRUCTOR)
-  create(@Req() req: Request, @Body() createQuizDto: CreateQuizDto) {
+  create(@Param('courseId') courseId:number,@Req() req: Request, @Body() createQuizDto: CreateQuizDto) {
       const instructorId = (req.user as User).id;
-      return this.quizzesService.createQuiz(createQuizDto, instructorId);
+      return this.quizzesService.createQuiz(+courseId,createQuizDto, +instructorId);
   }
 
-  @Post(':quizId/take')
+  @Post('/:quizId/take')
   @UseGuards(JwtMiddleware)
-  async takeQuiz(@Param('quizId') quizId: string, @Req() req: Request) {
+  @Roles(Role.STUDENT)
+  async takeQuiz(@Param('quizId') quizId: number, @Req() req: Request) {
       const studentId = (req.user as User).id;
       return this.quizzesService.takeQuiz(+quizId, studentId);
   }
@@ -45,13 +46,14 @@ export class QuizzesController {
   @Post(':quizId/answers')
   @UseGuards(JwtMiddleware)
   async submitAnswers(
-      @Param('quizId') quizId: string,
-      @Body() submitAnswersDto: SubmitAnswersDto,
-      @Req() req: Request
+      @Param('quizId') quizId: number,
+      @Req() req: Request,
+      @Body() submitAnswersDto: SubmitAnswersDto
   ) {
       const studentId = (req.user as User).id;
-      return this.quizzesService.submitAnswers(+quizId, studentId, submitAnswersDto);
+      return this.quizzesService.submitQuizAnswers(+quizId, studentId, submitAnswersDto);
   }
+  
 
   @Get()
   @UseGuards(JwtMiddleware, RolesGuard)
