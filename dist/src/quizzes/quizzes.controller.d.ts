@@ -6,7 +6,7 @@ import { Request } from 'express';
 export declare class QuizzesController {
     private readonly quizzesService;
     constructor(quizzesService: QuizzesService);
-    create(courseId: number, req: Request, createQuizDto: CreateQuizDto): Promise<{
+    createQuiz(courseId: number, req: Request, createQuizDto: CreateQuizDto): Promise<{
         id: number;
         title: string;
         description: string;
@@ -16,7 +16,7 @@ export declare class QuizzesController {
         createdAt: Date;
         updatedAt: Date;
     }>;
-    takeQuiz(quizId: number, req: Request): Promise<{
+    startQuiz(quizId: number, req: Request): Promise<{
         message: string;
         quizAttempt: {
             id: number;
@@ -26,11 +26,11 @@ export declare class QuizzesController {
             dateTaken: Date;
         };
     }>;
-    submitAnswers(quizId: number, req: Request, submitAnswersDto: SubmitAnswersDto): Promise<{
+    submitQuizAnswers(quizId: number, req: Request, submitAnswersDto: SubmitAnswersDto): Promise<{
         message: string;
         score: number;
     }>;
-    findAll(): Promise<{
+    getAllQuizzes(): Promise<{
         id: number;
         title: string;
         description: string;
@@ -40,7 +40,7 @@ export declare class QuizzesController {
         createdAt: Date;
         updatedAt: Date;
     }[]>;
-    findOne(id: number): Promise<{
+    getQuizById(id: number): Promise<{
         id: number;
         title: string;
         description: string;
@@ -50,7 +50,7 @@ export declare class QuizzesController {
         createdAt: Date;
         updatedAt: Date;
     }>;
-    update(id: string, updateQuizDto: UpdateQuizDto, req: Request): Promise<{
+    updateQuiz(id: string, updateQuizDto: UpdateQuizDto, req: Request): Promise<{
         id: number;
         title: string;
         description: string;
@@ -60,7 +60,20 @@ export declare class QuizzesController {
         createdAt: Date;
         updatedAt: Date;
     }>;
-    remove(id: string, req: Request): Promise<{
+    deleteQuiz(id: string, req: Request): Promise<{
         message: string;
+    }>;
+    getStudentQuizResult(req: Request, id: number): Promise<{
+        message: string;
+        score: number;
+    }>;
+    getAllStudentsQuizResults(req: Request, id: number): Promise<{
+        message: string;
+        retsults: {
+            score: number;
+            student: {
+                name: string;
+            };
+        }[];
     }>;
 }

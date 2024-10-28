@@ -83,6 +83,48 @@ let QuizzesService = class QuizzesService {
             throw new common_1.BadRequestException(`Failed to delete quiz with ID ${id}`);
         }
     }
+    async getResultQuizService(id, studentId) {
+        const score = await this.prisma.quizAttempt.findFirst({
+            where: {
+                quizId: id,
+                studentId: studentId,
+            },
+        });
+        if (!score) {
+            throw new common_1.NotFoundException(`No attempt found for quiz ID ${id} by student ID ${studentId}`);
+        }
+        return {
+            message: 'Quiz results ',
+            score: score.score,
+        };
+    }
+    async getResultQuizStudentsService(id, instructorId) {
+        const checkInstructor = await this.prisma.quiz.findUnique({
+            where: {
+                id
+            }
+        });
+        if (checkInstructor.instructorId !== instructorId) {
+            throw new common_1.BadRequestException('You do not have permission to view results of student');
+        }
+        const retsults = await this.prisma.quizAttempt.findMany({
+            where: {
+                quizId: id,
+            },
+            select: {
+                student: {
+                    select: {
+                        name: true
+                    }
+                },
+                score: true
+            }
+        });
+        return {
+            message: 'Quiz results ',
+            retsults: retsults
+        };
+    }
     async ensureQuizExists(id) {
         const quiz = await this.prisma.quiz.findUnique({
             where: { id },

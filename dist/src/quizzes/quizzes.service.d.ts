@@ -48,6 +48,19 @@ export declare class QuizzesService {
     deleteQuiz(id: number, instructorId: number): Promise<{
         message: string;
     }>;
+    getResultQuizService(id: number, studentId: number): Promise<{
+        message: string;
+        score: number;
+    }>;
+    getResultQuizStudentsService(id: number, instructorId: number): Promise<{
+        message: string;
+        retsults: {
+            score: number;
+            student: {
+                name: string;
+            };
+        }[];
+    }>;
     private ensureQuizExists;
     takeQuiz(quizId: number, studentId: number): Promise<{
         message: string;

@@ -1,14 +1,14 @@
 import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  Patch,
-  Delete,
-  UseGuards,
-  Req,
-  UsePipes,
+    Controller,
+    Get,
+    Post,
+    Body,
+    Param,
+    Patch,
+    Delete,
+    UseGuards,
+    Req,
+    UsePipes,
 } from '@nestjs/common';
 import { QuizzesService } from './quizzes.service';
 import { CreateQuizDto } from './dto/create-quiz.dto';
@@ -25,69 +25,84 @@ import { NotFoundGuard } from './guards/not-found';
 
 @Controller('/api/quizzes')
 export class QuizzesController {
-  constructor(private readonly quizzesService: QuizzesService) { }
+    constructor(private readonly quizzesService: QuizzesService) { }
 
-  @Post(':courseId')
-  @UseGuards(JwtMiddleware, RolesGuard)
-  @Roles(Role.INSTRUCTOR)
-  create(@Param('courseId') courseId:number,@Req() req: Request, @Body() createQuizDto: CreateQuizDto) {
-      const instructorId = (req.user as User).id;
-      return this.quizzesService.createQuiz(+courseId,createQuizDto, +instructorId);
-  }
+    @Post(':courseId')
+    @UseGuards(JwtMiddleware, RolesGuard)
+    @Roles(Role.INSTRUCTOR)
+    createQuiz(@Param('courseId') courseId: number, @Req() req: Request, @Body() createQuizDto: CreateQuizDto) {
+        const instructorId = (req.user as User).id;
+        return this.quizzesService.createQuiz(+courseId, createQuizDto, +instructorId);
+    }
 
-  @Post('/:quizId/take')
-  @UseGuards(JwtMiddleware)
-  @Roles(Role.STUDENT)
-  async takeQuiz(@Param('quizId') quizId: number, @Req() req: Request) {
-      const studentId = (req.user as User).id;
-      return this.quizzesService.takeQuiz(+quizId, studentId);
-  }
+    @Post('/:quizId/take')
+    @UseGuards(JwtMiddleware)
+    @Roles(Role.STUDENT)
+    startQuiz(@Param('quizId') quizId: number, @Req() req: Request) {
+        const studentId = (req.user as User).id;
+        return this.quizzesService.takeQuiz(+quizId, studentId);
+    }
 
-  @Post(':quizId/answers')
-  @UseGuards(JwtMiddleware)
-  async submitAnswers(
-      @Param('quizId') quizId: number,
-      @Req() req: Request,
-      @Body() submitAnswersDto: SubmitAnswersDto
-  ) {
-      const studentId = (req.user as User).id;
-      return this.quizzesService.submitQuizAnswers(+quizId, studentId, submitAnswersDto);
-  }
-  
+    @Post(':quizId/answers')
+    @UseGuards(JwtMiddleware)
+    submitQuizAnswers(
+        @Param('quizId') quizId: number,
+        @Req() req: Request,
+        @Body() submitAnswersDto: SubmitAnswersDto
+    ) {
+        const studentId = (req.user as User).id;
+        return this.quizzesService.submitQuizAnswers(+quizId, studentId, submitAnswersDto);
+    }
 
-  @Get()
-  @UseGuards(JwtMiddleware, RolesGuard)
-  @Roles(Role.INSTRUCTOR)
-  findAll() {
-      return this.quizzesService.getQuizzes();
-  }
+    @Get()
+    @UseGuards(JwtMiddleware, RolesGuard)
+    @Roles(Role.INSTRUCTOR)
+    getAllQuizzes() {
+        return this.quizzesService.getQuizzes();
+    }
 
-  @Get(':id')
-  @UseGuards(JwtMiddleware, RolesGuard)
-  @Roles(Role.INSTRUCTOR)
-  @UseGuards(NotFoundGuard)
-  @UsePipes(ValidationPipe)
-  findOne(@Param('id') id: number) {
-      return this.quizzesService.getQuizById(+id);
-  }
+    @Get(':id')
+    @UseGuards(JwtMiddleware, RolesGuard)
+    @Roles(Role.INSTRUCTOR)
+    @UseGuards(NotFoundGuard)
+    @UsePipes(ValidationPipe)
+    getQuizById(@Param('id') id: number) {
+        return this.quizzesService.getQuizById(+id);
+    }
 
-  @Patch(':id')
-  @UseGuards(JwtMiddleware, RolesGuard)
-  @Roles(Role.INSTRUCTOR)
-  update(
-      @Param('id') id: string,
-      @Body() updateQuizDto: UpdateQuizDto,
-      @Req() req: Request,
-  ) {
-      const instructorId = (req.user as User).id;
-      return this.quizzesService.updateQuiz(+id, updateQuizDto, instructorId);
-  }
+    @Patch(':id')
+    @UseGuards(JwtMiddleware, RolesGuard)
+    @Roles(Role.INSTRUCTOR)
+    updateQuiz(
+        @Param('id') id: string,
+        @Body() updateQuizDto: UpdateQuizDto,
+        @Req() req: Request,
+    ) {
+        const instructorId = (req.user as User).id;
+        return this.quizzesService.updateQuiz(+id, updateQuizDto, instructorId);
+    }
 
-  @Delete(':id')
-  @UseGuards(JwtMiddleware, RolesGuard)
-  @Roles(Role.INSTRUCTOR)
-  remove(@Param('id') id: string, @Req() req: Request) {
-      const instructorId = (req.user as User).id;
-      return this.quizzesService.deleteQuiz(+id, instructorId);
-  }
+    @Delete(':id')
+    @UseGuards(JwtMiddleware, RolesGuard)
+    @Roles(Role.INSTRUCTOR)
+    deleteQuiz(@Param('id') id: string, @Req() req: Request) {
+        const instructorId = (req.user as User).id;
+        return this.quizzesService.deleteQuiz(+id, instructorId);
+    }
+
+    @Get(':id/results/student')
+    @UseGuards(JwtMiddleware)
+    @Roles(Role.STUDENT)
+    getStudentQuizResult(@Req() req: Request, @Param('id') id: number) {
+        const studentId = (req.user as User).id;
+        return this.quizzesService.getResultQuizService(+id, studentId);
+    }
+
+    @Get(':id/results/AllStudents')
+    @UseGuards(JwtMiddleware, RolesGuard)
+    @Roles(Role.INSTRUCTOR)
+    getAllStudentsQuizResults(@Req() req: Request, @Param('id') id: number) {
+        const instructorId = (req.user as User).id;
+        return this.quizzesService.getResultQuizStudentsService(+id, instructorId);
+    }
 }
