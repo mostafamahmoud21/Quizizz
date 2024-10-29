@@ -32,9 +32,9 @@ let QuizzesController = class QuizzesController {
         const instructorId = req.user.id;
         return this.quizzesService.createQuiz(+courseId, createQuizDto, +instructorId);
     }
-    startQuiz(quizId, req) {
+    startQuiz(courseId, quizId, req) {
         const studentId = req.user.id;
-        return this.quizzesService.takeQuiz(+quizId, studentId);
+        return this.quizzesService.takeQuiz(+quizId, studentId, +courseId);
     }
     submitQuizAnswers(quizId, req, submitAnswersDto) {
         const studentId = req.user.id;
@@ -76,13 +76,14 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], QuizzesController.prototype, "createQuiz", null);
 __decorate([
-    (0, common_1.Post)('/:quizId/take'),
+    (0, common_1.Post)('/:courseId/:quizId/take'),
     (0, common_1.UseGuards)(jwt_middleware_1.JwtMiddleware),
     (0, roles_decorator_1.Roles)(roles_enum_1.Role.STUDENT),
-    __param(0, (0, common_1.Param)('quizId')),
-    __param(1, (0, common_1.Req)()),
+    __param(0, (0, common_1.Param)('courseId')),
+    __param(1, (0, common_1.Param)('quizId')),
+    __param(2, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Object]),
+    __metadata("design:paramtypes", [Number, Number, Object]),
     __metadata("design:returntype", void 0)
 ], QuizzesController.prototype, "startQuiz", null);
 __decorate([

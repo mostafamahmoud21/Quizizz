@@ -62,7 +62,7 @@ export declare class QuizzesService {
         }[];
     }>;
     private ensureQuizExists;
-    takeQuiz(quizId: number, studentId: number): Promise<{
+    takeQuiz(quizId: number, studentId: number, courseId: number): Promise<{
         message: string;
         quizAttempt: {
             id: number;

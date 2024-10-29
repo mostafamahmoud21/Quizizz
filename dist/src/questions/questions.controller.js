@@ -21,6 +21,9 @@ const roles_decorator_1 = require("../auth/decorators/roles.decorator");
 const roles_enum_1 = require("../auth/enums/roles.enum");
 const jwt_middleware_1 = require("../auth/middleware/jwt.middleware");
 const roles_guard_1 = require("../auth/guards/roles.guard");
+const not_found_1 = require("./guards/not-found");
+const numeric_id_pipe_1 = require("./pipes/numeric-id.pipe");
+const not_found_questions_1 = require("./guards/not-found-questions");
 let QuestionsController = class QuestionsController {
     constructor(questionsService) {
         this.questionsService = questionsService;
@@ -49,6 +52,8 @@ __decorate([
     (0, common_1.Post)(),
     (0, common_1.UseGuards)(jwt_middleware_1.JwtMiddleware, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(roles_enum_1.Role.INSTRUCTOR),
+    (0, common_1.UseGuards)(not_found_1.NotFoundGuard),
+    (0, common_1.UsePipes)(numeric_id_pipe_1.ValidationPipe),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Param)('quizId', common_1.ParseIntPipe)),
     __param(2, (0, common_1.Body)()),
@@ -58,6 +63,8 @@ __decorate([
 ], QuestionsController.prototype, "createQuestion", null);
 __decorate([
     (0, common_1.Get)(),
+    (0, common_1.UseGuards)(not_found_1.NotFoundGuard),
+    (0, common_1.UsePipes)(numeric_id_pipe_1.ValidationPipe),
     __param(0, (0, common_1.Param)('quizId', common_1.ParseIntPipe)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
@@ -65,6 +72,8 @@ __decorate([
 ], QuestionsController.prototype, "getQuestions", null);
 __decorate([
     (0, common_1.Get)(':questionId'),
+    (0, common_1.UseGuards)(not_found_1.NotFoundGuard, not_found_questions_1.NotFoundGuardqQuestions),
+    (0, common_1.UsePipes)(numeric_id_pipe_1.ValidationPipe),
     __param(0, (0, common_1.Param)('quizId', common_1.ParseIntPipe)),
     __param(1, (0, common_1.Param)('questionId', common_1.ParseIntPipe)),
     __metadata("design:type", Function),
@@ -75,6 +84,8 @@ __decorate([
     (0, common_1.Put)(':questionId'),
     (0, common_1.UseGuards)(jwt_middleware_1.JwtMiddleware, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(roles_enum_1.Role.INSTRUCTOR),
+    (0, common_1.UseGuards)(not_found_1.NotFoundGuard, not_found_questions_1.NotFoundGuardqQuestions),
+    (0, common_1.UsePipes)(numeric_id_pipe_1.ValidationPipe),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Param)('quizId', common_1.ParseIntPipe)),
     __param(2, (0, common_1.Param)('questionId', common_1.ParseIntPipe)),
@@ -87,6 +98,8 @@ __decorate([
     (0, common_1.Delete)(':questionId'),
     (0, common_1.UseGuards)(jwt_middleware_1.JwtMiddleware, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(roles_enum_1.Role.INSTRUCTOR),
+    (0, common_1.UseGuards)(not_found_1.NotFoundGuard, not_found_questions_1.NotFoundGuardqQuestions),
+    (0, common_1.UsePipes)(numeric_id_pipe_1.ValidationPipe),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Param)('quizId', common_1.ParseIntPipe)),
     __param(2, (0, common_1.Param)('questionId', common_1.ParseIntPipe)),

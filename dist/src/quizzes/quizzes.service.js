@@ -134,18 +134,21 @@ let QuizzesService = class QuizzesService {
         }
         return quiz;
     }
-    async takeQuiz(quizId, studentId) {
-        const quiz = await this.prisma.quiz.findUnique({
-            where: { id: quizId },
+    async takeQuiz(quizId, studentId, courseId) {
+        const enrollment = await this.prisma.enrollment.findFirst({
+            where: { studentId, courseId },
+        });
+        if (!enrollment) {
+            throw new common_1.BadRequestException('You need to be enrolled in this course to take the quiz');
+        }
+        const quiz = await this.prisma.quiz.findFirst({
+            where: { id: quizId, courseId },
         });
         if (!quiz) {
-            throw new common_1.NotFoundException(`Quiz with ID ${quizId} not found`);
+            throw new common_1.BadRequestException('This quiz does not belong to the specified course');
         }
         const existingAttempt = await this.prisma.quizAttempt.findFirst({
-            where: {
-                quizId: quizId,
-                studentId: studentId,
-            }
+            where: { quizId, studentId },
         });
         if (existingAttempt) {
             throw new common_1.BadRequestException('You have already taken this quiz');
@@ -158,43 +161,36 @@ let QuizzesService = class QuizzesService {
                     score: 0,
                 },
             });
-            return {
-                message: 'Quiz started successfully',
-                quizAttempt,
-            };
+            return { message: 'Quiz started successfully', quizAttempt };
         }
         catch (error) {
             throw new common_1.BadRequestException('Failed to start quiz');
         }
     }
     async submitQuizAnswers(quizId, studentId, submitAnswersDto) {
-        const quiz = await this.ensureQuizExists(quizId);
-        let scoreStudent = 0;
+        await this.ensureQuizExists(quizId);
         const existingAttempt = await this.prisma.quizAttempt.findFirst({
             where: { quizId, studentId },
         });
         if (!existingAttempt) {
             throw new common_1.BadRequestException('You need to start the quiz before submitting answers.');
         }
+        let scoreStudent = 0;
+        const answers = submitAnswersDto.answers.map((ans) => ({
+            questionId: ans.questionId,
+            studentId,
+            text: ans.answerText,
+        }));
         try {
-            const answers = submitAnswersDto.answers.map((ans) => ({
-                questionId: ans.questionId,
-                studentId,
-                text: ans.answerText,
-            }));
             await this.prisma.answer.createMany({ data: answers });
-            for (const ans of answers) {
-                const correctAnswer = await this.prisma.question.findUnique({
-                    where: { id: ans.questionId },
-                    select: { correctAnswer: true },
-                });
-                if (!correctAnswer) {
-                    throw new common_1.NotFoundException(`Question with ID ${ans.questionId} not found`);
-                }
-                if (ans.text === correctAnswer.correctAnswer) {
-                    scoreStudent++;
-                }
-            }
+            const correctAnswers = await this.prisma.question.findMany({
+                where: { id: { in: answers.map((ans) => ans.questionId) } },
+                select: { id: true, correctAnswer: true },
+            });
+            scoreStudent = answers.reduce((score, answer) => {
+                const correctAnswer = correctAnswers.find((q) => q.id === answer.questionId);
+                return correctAnswer && answer.text === correctAnswer.correctAnswer ? score + 1 : score;
+            }, 0);
             await this.prisma.quizAttempt.update({
                 where: { id: existingAttempt.id },
                 data: { score: scoreStudent },

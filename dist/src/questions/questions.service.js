@@ -18,7 +18,7 @@ let QuestionsService = class QuestionsService {
     }
     async createQuestion(quizId, createQuestionDto, instructorId) {
         const quiz = await this.prisma.quiz.findUnique({ where: { id: quizId } });
-        if (!quiz || quiz.instructorId !== instructorId) {
+        if (quiz.instructorId !== instructorId) {
             throw new common_1.BadRequestException('You do not have permission to create questions for this quiz');
         }
         return this.prisma.question.create({
@@ -37,14 +37,11 @@ let QuestionsService = class QuestionsService {
         const question = await this.prisma.question.findUnique({
             where: { id: questionId, quizId },
         });
-        if (!question) {
-            throw new common_1.NotFoundException('Question not found');
-        }
         return question;
     }
     async updateQuestion(quizId, questionId, updateQuestionDto, instructorId) {
         const quiz = await this.prisma.quiz.findUnique({ where: { id: quizId } });
-        if (!quiz || quiz.instructorId !== instructorId) {
+        if (quiz.instructorId !== instructorId) {
             throw new common_1.BadRequestException('You do not have permission to update questions for this quiz');
         }
         return this.prisma.question.update({
@@ -54,7 +51,7 @@ let QuestionsService = class QuestionsService {
     }
     async deleteQuestion(quizId, questionId, instructorId) {
         const quiz = await this.prisma.quiz.findUnique({ where: { id: quizId } });
-        if (!quiz || quiz.instructorId !== instructorId) {
+        if (quiz.instructorId !== instructorId) {
             throw new common_1.BadRequestException('You do not have permission to delete questions for this quiz');
         }
         return this.prisma.question.delete({

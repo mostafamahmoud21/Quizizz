@@ -21,6 +21,9 @@ const jwt_middleware_1 = require("../auth/middleware/jwt.middleware");
 const roles_guard_1 = require("../auth/guards/roles.guard");
 const roles_enum_1 = require("../auth/enums/roles.enum");
 const roles_decorator_1 = require("../auth/decorators/roles.decorator");
+const not_found_choice_1 = require("./guards/not-found-choice");
+const numeric_id_pipe_1 = require("./pipes/numeric-id.pipe");
+const not_found_questions_1 = require("./guards/not-found-questions");
 let ChoicesController = class ChoicesController {
     constructor(choicesService) {
         this.choicesService = choicesService;
@@ -29,7 +32,7 @@ let ChoicesController = class ChoicesController {
         const instructorId = req.user.id;
         return this.choicesService.createChoice(questionId, instructorId, createChoiceDto);
     }
-    async updateChoice(id, questionId, req, updateChoiceDto) {
+    async updateChoice(questionId, id, req, updateChoiceDto) {
         const instructorId = req.user.id;
         return this.choicesService.updateChoice(id, questionId, instructorId, updateChoiceDto);
     }
@@ -40,9 +43,11 @@ let ChoicesController = class ChoicesController {
 };
 exports.ChoicesController = ChoicesController;
 __decorate([
-    (0, common_1.Post)('questions/:questionId'),
+    (0, common_1.Post)(':questionId/choices'),
     (0, common_1.UseGuards)(jwt_middleware_1.JwtMiddleware, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(roles_enum_1.Role.INSTRUCTOR),
+    (0, common_1.UseGuards)(not_found_questions_1.NotFoundGuardqQuestions),
+    (0, common_1.UsePipes)(numeric_id_pipe_1.ValidationPipe),
     __param(0, (0, common_1.Param)('questionId', common_1.ParseIntPipe)),
     __param(1, (0, common_1.Req)()),
     __param(2, (0, common_1.Body)()),
@@ -51,11 +56,13 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ChoicesController.prototype, "createChoice", null);
 __decorate([
-    (0, common_1.Put)(':id/questions/:questionId'),
+    (0, common_1.Put)(':questionId/choices/:id'),
     (0, common_1.UseGuards)(jwt_middleware_1.JwtMiddleware, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(roles_enum_1.Role.INSTRUCTOR),
-    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
-    __param(1, (0, common_1.Param)('questionId', common_1.ParseIntPipe)),
+    (0, common_1.UseGuards)(not_found_questions_1.NotFoundGuardqQuestions, not_found_choice_1.NotFoundGuardqChoice),
+    (0, common_1.UsePipes)(numeric_id_pipe_1.ValidationPipe),
+    __param(0, (0, common_1.Param)('questionId', common_1.ParseIntPipe)),
+    __param(1, (0, common_1.Param)('id', common_1.ParseIntPipe)),
     __param(2, (0, common_1.Req)()),
     __param(3, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -63,9 +70,11 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ChoicesController.prototype, "updateChoice", null);
 __decorate([
-    (0, common_1.Delete)(':id/questions/:questionId'),
+    (0, common_1.Delete)(':questionId/choices/:id'),
     (0, common_1.UseGuards)(jwt_middleware_1.JwtMiddleware, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(roles_enum_1.Role.INSTRUCTOR),
+    (0, common_1.UseGuards)(not_found_questions_1.NotFoundGuardqQuestions, not_found_choice_1.NotFoundGuardqChoice),
+    (0, common_1.UsePipes)(numeric_id_pipe_1.ValidationPipe),
     __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
     __param(1, (0, common_1.Param)('questionId', common_1.ParseIntPipe)),
     __param(2, (0, common_1.Req)()),
@@ -74,7 +83,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ChoicesController.prototype, "deleteChoice", null);
 exports.ChoicesController = ChoicesController = __decorate([
-    (0, common_1.Controller)('choices'),
+    (0, common_1.Controller)('questions'),
     __metadata("design:paramtypes", [choices_service_1.ChoicesService])
 ], ChoicesController);
 //# sourceMappingURL=choices.controller.js.map

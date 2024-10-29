@@ -7,16 +7,16 @@ export declare class QuizzesController {
     private readonly quizzesService;
     constructor(quizzesService: QuizzesService);
     createQuiz(courseId: number, req: Request, createQuizDto: CreateQuizDto): Promise<{
-        id: number;
         title: string;
+        type: import(".prisma/client").$Enums.Types;
         description: string;
+        id: number;
         instructorId: number;
         courseId: number;
-        type: import(".prisma/client").$Enums.Types;
         createdAt: Date;
         updatedAt: Date;
     }>;
-    startQuiz(quizId: number, req: Request): Promise<{
+    startQuiz(courseId: number, quizId: number, req: Request): Promise<{
         message: string;
         quizAttempt: {
             id: number;
@@ -31,32 +31,32 @@ export declare class QuizzesController {
         score: number;
     }>;
     getAllQuizzes(): Promise<{
-        id: number;
         title: string;
+        type: import(".prisma/client").$Enums.Types;
         description: string;
+        id: number;
         instructorId: number;
         courseId: number;
-        type: import(".prisma/client").$Enums.Types;
         createdAt: Date;
         updatedAt: Date;
     }[]>;
     getQuizById(id: number): Promise<{
-        id: number;
         title: string;
+        type: import(".prisma/client").$Enums.Types;
         description: string;
+        id: number;
         instructorId: number;
         courseId: number;
-        type: import(".prisma/client").$Enums.Types;
         createdAt: Date;
         updatedAt: Date;
     }>;
     updateQuiz(id: string, updateQuizDto: UpdateQuizDto, req: Request): Promise<{
-        id: number;
         title: string;
+        type: import(".prisma/client").$Enums.Types;
         description: string;
+        id: number;
         instructorId: number;
         courseId: number;
-        type: import(".prisma/client").$Enums.Types;
         createdAt: Date;
         updatedAt: Date;
     }>;

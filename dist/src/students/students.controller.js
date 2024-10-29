@@ -19,6 +19,8 @@ const jwt_middleware_1 = require("../auth/middleware/jwt.middleware");
 const roles_guard_1 = require("../auth/guards/roles.guard");
 const roles_enum_1 = require("../auth/enums/roles.enum");
 const roles_decorator_1 = require("../auth/decorators/roles.decorator");
+const not_found_1 = require("./guards/not-found");
+const numeric_id_pipe_1 = require("./pipes/numeric-id.pipe");
 let StudentsController = class StudentsController {
     constructor(studentsService) {
         this.studentsService = studentsService;
@@ -42,7 +44,7 @@ exports.StudentsController = StudentsController;
 __decorate([
     (0, common_1.Get)('/courses'),
     (0, common_1.UseGuards)(jwt_middleware_1.JwtMiddleware, roles_guard_1.RolesGuard),
-    (0, roles_decorator_1.Roles)(roles_enum_1.Role.STUDENT || roles_enum_1.Role.INSTRUCTOR),
+    (0, roles_decorator_1.Roles)(roles_enum_1.Role.STUDENT, roles_enum_1.Role.INSTRUCTOR),
     __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -52,6 +54,8 @@ __decorate([
     (0, common_1.Post)('/courses/:id/enroll'),
     (0, common_1.UseGuards)(jwt_middleware_1.JwtMiddleware, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(roles_enum_1.Role.STUDENT),
+    (0, common_1.UseGuards)(not_found_1.NotFoundGuard),
+    (0, common_1.UsePipes)(numeric_id_pipe_1.ValidationPipe),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
@@ -71,6 +75,8 @@ __decorate([
     (0, common_1.Get)('/course/:id'),
     (0, common_1.UseGuards)(jwt_middleware_1.JwtMiddleware, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(roles_enum_1.Role.STUDENT),
+    (0, common_1.UseGuards)(not_found_1.NotFoundGuard),
+    (0, common_1.UsePipes)(numeric_id_pipe_1.ValidationPipe),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),

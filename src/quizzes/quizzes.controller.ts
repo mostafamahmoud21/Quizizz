@@ -35,12 +35,12 @@ export class QuizzesController {
         return this.quizzesService.createQuiz(+courseId, createQuizDto, +instructorId);
     }
 
-    @Post('/:quizId/take')
+    @Post('/:courseId/:quizId/take')
     @UseGuards(JwtMiddleware)
     @Roles(Role.STUDENT)
-    startQuiz(@Param('quizId') quizId: number, @Req() req: Request) {
+    startQuiz(@Param('courseId') courseId: number,@Param('quizId') quizId: number, @Req() req: Request) {
         const studentId = (req.user as User).id;
-        return this.quizzesService.takeQuiz(+quizId, studentId);
+        return this.quizzesService.takeQuiz(+quizId, studentId,+courseId);
     }
 
     @Post(':quizId/answers')

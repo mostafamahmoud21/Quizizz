@@ -1,4 +1,4 @@
-import { Body, Controller, Param, ParseIntPipe, Post, Delete, Put, Get, UseGuards, Req } from '@nestjs/common';
+import { Body, Controller, Param, ParseIntPipe, Post, Delete, Put, Get, UseGuards, Req, UsePipes } from '@nestjs/common';
 import { QuestionsService } from './questions.service';
 import { CreateQuestionDto } from './dto/create-question-dto';
 import { UpdateQuestionDto } from './dto/create-question-dto';
@@ -8,15 +8,20 @@ import { JwtMiddleware } from 'src/auth/middleware/jwt.middleware';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { User } from 'src/auth/interfaces/user.interface';
 import { Request } from 'express';
+import { NotFoundGuard } from './guards/not-found';
+import { ValidationPipe } from './pipes/numeric-id.pipe';
+import { NotFoundGuardqQuestions } from './guards/not-found-questions';
 
 @Controller('quizzes/:quizId/questions')
 export class QuestionsController {
-  constructor(private readonly questionsService: QuestionsService) {}
+  constructor(private readonly questionsService: QuestionsService) { }
 
   // Create a question
   @Post()
   @UseGuards(JwtMiddleware, RolesGuard)
   @Roles(Role.INSTRUCTOR)
+  @UseGuards(NotFoundGuard)
+  @UsePipes(ValidationPipe)
   async createQuestion(
     @Req() req: Request,
     @Param('quizId', ParseIntPipe) quizId: number,
@@ -28,12 +33,16 @@ export class QuestionsController {
 
   // Get all questions for a quiz
   @Get()
+  @UseGuards(NotFoundGuard)
+  @UsePipes(ValidationPipe)
   async getQuestions(@Param('quizId', ParseIntPipe) quizId: number) {
     return this.questionsService.getQuestions(quizId);
   }
 
   // Get a specific question by ID
   @Get(':questionId')
+  @UseGuards(NotFoundGuard,NotFoundGuardqQuestions)
+  @UsePipes(ValidationPipe)
   async getQuestionById(
     @Param('quizId', ParseIntPipe) quizId: number,
     @Param('questionId', ParseIntPipe) questionId: number,
@@ -45,6 +54,8 @@ export class QuestionsController {
   @Put(':questionId')
   @UseGuards(JwtMiddleware, RolesGuard)
   @Roles(Role.INSTRUCTOR)
+  @UseGuards(NotFoundGuard,NotFoundGuardqQuestions)
+  @UsePipes(ValidationPipe)
   async updateQuestion(
     @Req() req: Request,
     @Param('quizId', ParseIntPipe) quizId: number,
@@ -59,6 +70,8 @@ export class QuestionsController {
   @Delete(':questionId')
   @UseGuards(JwtMiddleware, RolesGuard)
   @Roles(Role.INSTRUCTOR)
+  @UseGuards(NotFoundGuard,NotFoundGuardqQuestions)
+  @UsePipes(ValidationPipe)
   async deleteQuestion(
     @Req() req: Request,
     @Param('quizId', ParseIntPipe) quizId: number,
