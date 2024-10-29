@@ -1,0 +1,184 @@
+{
+  "info": {
+    "name": "Quiz API",
+    "description": "API for managing quizzes, questions, and choices.",
+    "version": "1.0.0",
+    "_postman_id": "unique-id-for-postman"
+  },
+  "item": [
+    {
+      "name": "Quizzes",
+      "item": [
+        {
+          "name": "Create Quiz",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"title\": \"Quiz Title\", \"description\": \"Quiz Description\", \"instructorId\": 1}"
+            },
+            "url": "http://localhost:3000/api/quizzes"
+          }
+        },
+        {
+          "name": "Get All Quizzes",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:3000/api/quizzes"
+          }
+        },
+        {
+          "name": "Get Quiz By ID",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:3000/api/quizzes/:id"
+          }
+        },
+        {
+          "name": "Update Quiz",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"title\": \"Updated Quiz Title\", \"description\": \"Updated Quiz Description\"}"
+            },
+            "url": "http://localhost:3000/api/quizzes/:id"
+          }
+        },
+        {
+          "name": "Delete Quiz",
+          "request": {
+            "method": "DELETE",
+            "url": "http://localhost:3000/api/quizzes/:id"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register Instructor",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\": \"Instructor Name\", \"email\": \"instructor@example.com\", \"password\": \"yourpassword\", \"role\": \"INSTRUCTOR\"}"
+            },
+            "url": "http://localhost:3000/auth/instructor/register"
+          }
+        },
+        {
+          "name": "Login Instructor",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\": \"instructor@example.com\", \"password\": \"yourpassword\"}"
+            },
+            "url": "http://localhost:3000/auth/instructor/login"
+          }
+        },
+        {
+          "name": "Register Student",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\": \"Student Name\", \"email\": \"student@example.com\", \"password\": \"yourpassword\", \"role\": \"STUDENT\"}"
+            },
+            "url": "http://localhost:3000/auth/student/register"
+          }
+        },
+        {
+          "name": "Login Student",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\": \"student@example.com\", \"password\": \"yourpassword\"}"
+            },
+            "url": "http://localhost:3000/auth/student/login"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Questions",
+      "item": [
+        {
+          "name": "Add Question to Quiz",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"text\": \"What is your question?\", \"quizId\": 1}"
+            },
+            "url": "http://localhost:3000/quizzes/:quizId/questions"
+          }
+        },
+        {
+          "name": "Get Questions for Quiz",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:3000/quizzes/:quizId/questions"
+          }
+        },
+        {
+          "name": "Update Question",
+          "request": {
+            "method": "PUT",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"text\": \"Updated question text\"}"
+            },
+            "url": "http://localhost:3000/quizzes/:quizId/questions/:id"
+          }
+        },
+        {
+          "name": "Delete Question",
+          "request": {
+            "method": "DELETE",
+            "url": "http://localhost:3000/quizzes/:quizId/questions/:id"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Choices",
+      "item": [
+        {
+          "name": "Add Choice to Question",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"text\": \"Choice text\", \"questionId\": 1}"
+            },
+            "url": "http://localhost:3000/choices/questions/:questionId"
+          }
+        },
+        {
+          "name": "Update Choice",
+          "request": {
+            "method": "PUT",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"text\": \"Updated choice text\"}"
+            },
+            "url": "http://localhost:3000/choices/:id/questions/:questionId"
+          }
+        },
+        {
+          "name": "Delete Choice",
+          "request": {
+            "method": "DELETE",
+            "url": "http://localhost:3000/choices/:id/questions/:questionId"
+          }
+        }
+      ]
+    }
+  ]
+}
