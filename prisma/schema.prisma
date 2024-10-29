@@ -1,0 +1,130 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Instructor {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  quizzes Quiz[]
+  courses Course[] // An instructor can create multiple courses
+}
+
+model Student {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  enrollments Enrollment[] // Many-to-many relationship between students and courses
+
+  QuizAttempt QuizAttempt[]
+}
+
+enum Role {
+  INSTRUCTOR
+  STUDENT
+}
+
+model Course {
+  id           Int        @id @default(autoincrement())
+  title        String
+  description  String
+  instructorId Int
+  instructor   Instructor @relation(fields: [instructorId], references: [id])
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  // Relations
+  enrollments Enrollment[] // Many-to-many relationship with students
+  quizzes     Quiz[]
+}
+
+model Enrollment {
+  id        Int     @id @default(autoincrement())
+  studentId Int
+  courseId  Int
+  student   Student @relation(fields: [studentId], references: [id])
+  course    Course  @relation(fields: [courseId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Quiz {
+  id           Int        @id @default(autoincrement())
+  title        String
+  description  String
+  instructorId Int
+  instructor   Instructor @relation(fields: [instructorId], references: [id])
+  courseId     Int
+  course       Course     @relation(fields: [courseId], references: [id])
+  type         Types
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  // Relations
+  questions   Question[]
+  QuizAttempt QuizAttempt[]
+}
+
+model Question {
+  id        Int      @id @default(autoincrement())
+  text      String
+  quizId    Int
+  quiz      Quiz     @relation(fields: [quizId], references: [id])
+  level     Levels
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  choices Choice[]
+}
+
+model Choice {
+  id   Int    @id @default(autoincrement())
+  text String
+
+  questionId Int
+  question   Question @relation(fields: [questionId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model QuizAttempt {
+  id        Int      @id @default(autoincrement())
+  quizId    Int
+  studentId Int
+  score     Int
+  dateTaken DateTime @default(now())
+  quiz      Quiz     @relation(fields: [quizId], references: [id])
+  student   Student  @relation(fields: [studentId], references: [id])
+
+  @@unique([quizId, studentId]) // Composite unique constraint
+}
+
+enum Types {
+  Quiz
+  Final
+}
+
+enum Levels {
+  Easy
+  Medium
+  Hard
+}

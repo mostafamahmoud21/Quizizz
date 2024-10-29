@@ -1,0 +1,43 @@
+import { StudentsService } from './students.service';
+import { Request } from 'express';
+export declare class StudentsController {
+    private readonly studentsService;
+    constructor(studentsService: StudentsService);
+    findAllCourses(req: Request): Promise<{
+        title: string;
+        description: string;
+        id: number;
+        instructorId: number;
+        createdAt: Date;
+        updatedAt: Date;
+    }[]>;
+    enrollCourse(id: number, req: Request): Promise<{
+        message: string;
+    }>;
+    findMyCourseEnrollment(req: Request): Promise<{
+        course: {
+            title: string;
+            description: string;
+            instructor: {
+                name: string;
+            };
+        };
+    }[]>;
+    findCourse(id: number): Promise<{
+        title: string;
+        description: string;
+        instructor: {
+            name: string;
+        };
+    }>;
+    getStudentExams(req: Request): Promise<{
+        title: string;
+        type: import(".prisma/client").$Enums.Types;
+        description: string;
+        courseId: number;
+        id: number;
+        instructorId: number;
+        createdAt: Date;
+        updatedAt: Date;
+    }[]>;
+}
