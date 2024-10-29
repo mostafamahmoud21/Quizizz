@@ -83,21 +83,21 @@ export class QuizzesController {
       const instructorId = (req.user as User).id;
       return this.quizzesService.deleteQuiz(+id, instructorId);
   }
-  @Get(':quizId/results')
+   @Get(':quizId/results')
   @UseGuards(JwtMiddleware, RolesGuard)
   @Roles(Role.STUDENT)
-  findresult(@Param('quizId') quizId: string, @Req() req: Request) {
+  getStudentResult(@Param('quizId') quizId: string, @Req() req: Request) {
     const studentId = (req.user as User).id;
     return this.quizzesService.getStudentResult(studentId,+quizId);
   }
- @Get(':quizId/students/results')
+
+  @Get(':quizId/students/results')
   @UseGuards(JwtMiddleware, RolesGuard)
   @Roles(Role.INSTRUCTOR)
-  findresult(@Param('quizId') quizId: string, @Req() req: Request) {
+  getAllResults(@Param('quizId') quizId: string) {
     
     return this.quizzesService.getAllResults(+quizId);
   }
-  
 
   
 }
