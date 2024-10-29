@@ -16,26 +16,20 @@ let JwtMiddleware = class JwtMiddleware {
     constructor(jwtService) {
         this.jwtService = jwtService;
     }
-    use(req, res, next) {
-        const token = this.extractTokenFromHeader(req);
+    canActivate(context) {
+        const request = context.switchToHttp().getRequest();
+        const token = request.headers['authorization']?.split(' ')[1];
         if (!token) {
             throw new common_1.UnauthorizedException('Token is missing');
         }
         try {
             const decoded = this.jwtService.verify(token);
-            req.user = decoded;
-            next();
+            request.user = decoded;
+            return true;
         }
         catch (error) {
             throw new common_1.UnauthorizedException('Invalid token');
         }
-    }
-    extractTokenFromHeader(req) {
-        const authHeader = req.headers['authorization'];
-        if (!authHeader)
-            return null;
-        const token = authHeader.split(' ')[1];
-        return token || null;
     }
 };
 exports.JwtMiddleware = JwtMiddleware;
