@@ -1,0 +1,5 @@
+<<<<<<< HEAD:dist/quizzes/dto/submit-answers.dto.js.map
+{"version":3,"file":"submit-answers.dto.js","sourceRoot":"","sources":["../../../src/quizzes/dto/submit-answers.dto.ts"],"names":[],"mappings":";;;;;;;;;;;;AAAA,qDAAsD;AAEtD,MAAa,gBAAgB;CAI5B;AAJD,4CAIC;AADG;IAFC,IAAA,yBAAO,EAAC,EAAE,OAAO,EAAE,0BAA0B,EAAE,CAAC;IAChD,IAAA,4BAAU,EAAC,EAAE,OAAO,EAAE,6BAA6B,EAAE,CAAC;8BAC9C,KAAK;iDAAyC"}
+=======
+{"version":3,"file":"submit-answers.dto.js","sourceRoot":"","sources":["../../../../src/quizzes/dto/submit-answers.dto.ts"],"names":[],"mappings":";;;;;;;;;;;;AAAA,qDAA8E;AAC9E,yDAAyC;AAEzC,MAAM,SAAS;CAMd;AAJC;IADC,IAAA,0BAAQ,GAAE;;6CACQ;AAGnB;IADC,IAAA,0BAAQ,GAAE;;6CACQ;AAGrB,MAAa,gBAAgB;CAK5B;AALD,4CAKC;AADC;IAHC,IAAA,yBAAO,GAAE;IACT,IAAA,gCAAc,EAAC,EAAE,IAAI,EAAE,IAAI,EAAE,CAAC;IAC9B,IAAA,wBAAI,EAAC,GAAG,EAAE,CAAC,SAAS,CAAC;;iDACD"}
+>>>>>>> 66e1d7db664d8fb642bf14abfb28b6a14bd7ba04:dist/src/quizzes/dto/submit-answers.dto.js.map

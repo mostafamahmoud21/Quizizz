@@ -12,13 +12,15 @@ import { SubmitAnswersDto } from './dto/submit-answers.dto';
 export class QuizzesService {
     constructor(private readonly prisma: PrismaClient) { }
 
-    async createQuiz(createQuizDto: CreateQuizDto, instructorId: number) {
+    async createQuiz(courseId: number, createQuizDto: CreateQuizDto, instructorId: number) {
         try {
             return await this.prisma.quiz.create({
                 data: {
                     title: createQuizDto.title,
                     description: createQuizDto.description,
+                    type: createQuizDto.type,
                     instructorId: instructorId,
+                    courseId: courseId
                 },
             });
         } catch (error) {
@@ -50,6 +52,9 @@ export class QuizzesService {
         if (updateQuizDto.title) {
             updatedData.title = updateQuizDto.title;
         }
+        if (updateQuizDto.type) {
+            updatedData.type = updateQuizDto.type;
+        }
         if (updateQuizDto.description) {
             updatedData.description = updateQuizDto.description;
         }
@@ -63,7 +68,6 @@ export class QuizzesService {
             throw new BadRequestException(`Failed to update quiz with ID ${id}`);
         }
     }
-
 
     async deleteQuiz(id: number, instructorId: number) {
         const quiz = await this.ensureQuizExists(id);
@@ -82,6 +86,58 @@ export class QuizzesService {
         }
     }
 
+    async getResultQuizService(id: number, studentId: number) {
+
+        const score = await this.prisma.quizAttempt.findFirst({
+            where: {
+                quizId: id,
+                studentId: studentId,
+            },
+        });
+
+        if (!score) {
+            throw new NotFoundException(`No attempt found for quiz ID ${id} by student ID ${studentId}`);
+        }
+
+        return {
+            message: 'Quiz results ',
+            score: score.score,
+        };
+    }
+
+    async getResultQuizStudentsService(id: number, instructorId: number) {
+        const checkInstructor = await this.prisma.quiz.findUnique({
+            where: {
+                id
+            }
+        })
+
+        if (checkInstructor.instructorId !== instructorId) {
+            throw new BadRequestException('You do not have permission to view results of student');
+        }
+
+
+        const retsults = await this.prisma.quizAttempt.findMany({
+            where: {
+                quizId: id,
+            },
+            select: {
+                student: {
+                    select: {
+                        name: true
+                    }
+                },
+                score: true
+            }
+        });
+
+
+        return {
+            message: 'Quiz results ',
+            retsults: retsults
+        };
+    }
+
     private async ensureQuizExists(id: number) {
         const quiz = await this.prisma.quiz.findUnique({
             where: { id },
@@ -93,6 +149,7 @@ export class QuizzesService {
 
         return quiz;
     }
+<<<<<<< HEAD
     async takeQuiz(quizId: number, studentId: number) {
         try {
             return await this.prisma.quizAttempt.create({
@@ -102,16 +159,96 @@ export class QuizzesService {
                     score: 0, // Initialize score; adjust as needed
                 },
             });
+=======
+
+    async takeQuiz(quizId: number, studentId: number, courseId: number) {
+        const enrollment = await this.prisma.enrollment.findFirst({
+            where: { studentId, courseId },
+        });
+
+        if (!enrollment) {
+            throw new BadRequestException('You need to be enrolled in this course to take the quiz');
+        }
+
+        const quiz = await this.prisma.quiz.findFirst({
+            where: { id: quizId, courseId },
+        });
+
+        if (!quiz) {
+            throw new BadRequestException('This quiz does not belong to the specified course');
+        }
+
+        const existingAttempt = await this.prisma.quizAttempt.findFirst({
+            where: { quizId, studentId },
+        });
+
+        if (existingAttempt) {
+            throw new BadRequestException('You have already taken this quiz');
+        }
+
+        try {
+            const quizAttempt = await this.prisma.quizAttempt.create({
+                data: {
+                    quiz: { connect: { id: quizId } },
+                    student: { connect: { id: studentId } },
+                    score: 0,
+                },
+            });
+
+            return { message: 'Quiz started successfully', quizAttempt };
+>>>>>>> 66e1d7db664d8fb642bf14abfb28b6a14bd7ba04
         } catch (error) {
             throw new BadRequestException('Failed to start quiz');
         }
     }
+<<<<<<< HEAD
     async submitAnswers(quizId: number, studentId: number, answers: SubmitAnswersDto) {
         // Logic to save answers and calculate score if necessary
         try {
             // Implement answer saving logic here
             // For demonstration purposes
             return { message: 'Answers submitted successfully' };
+=======
+
+
+    async submitQuizAnswers(quizId: number, studentId: number, submitAnswersDto: SubmitAnswersDto) {
+        await this.ensureQuizExists(quizId);
+
+        const existingAttempt = await this.prisma.quizAttempt.findFirst({
+            where: { quizId, studentId },
+        });
+
+        if (!existingAttempt) {
+            throw new BadRequestException('You need to start the quiz before submitting answers.');
+        }
+
+        let scoreStudent = 0;
+        const answers = submitAnswersDto.answers.map((ans) => ({
+            questionId: ans.questionId,
+            studentId,
+            text: ans.answerText,
+        }));
+
+        try {
+            await this.prisma.answer.createMany({ data: answers });
+
+            const correctAnswers = await this.prisma.question.findMany({
+                where: { id: { in: answers.map((ans) => ans.questionId) } },
+                select: { id: true, correctAnswer: true },
+            });
+
+            scoreStudent = answers.reduce((score, answer) => {
+                const correctAnswer = correctAnswers.find((q) => q.id === answer.questionId);
+                return correctAnswer && answer.text === correctAnswer.correctAnswer ? score + 1 : score;
+            }, 0);
+
+            await this.prisma.quizAttempt.update({
+                where: { id: existingAttempt.id },
+                data: { score: scoreStudent },
+            });
+
+            return { message: 'Answers submitted successfully', score: scoreStudent };
+>>>>>>> 66e1d7db664d8fb642bf14abfb28b6a14bd7ba04
         } catch (error) {
             throw new BadRequestException('Failed to submit answers');
         }

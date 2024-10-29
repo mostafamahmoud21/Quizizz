@@ -5,10 +5,12 @@ import { QuestionsModule } from './questions/questions.module';
 import { ChoicesModule } from './choices/choices.module';
 import * as dotenv from 'dotenv';
 import { PrismaService } from './prisma/prisma.service';
+import { CoursesModule } from './courses/courses.module';
+import { StudentsModule } from './students/students.module';
 dotenv.config();
 
 @Module({
-  imports: [QuizzesModule, AuthModule, QuestionsModule, ChoicesModule],
+  imports: [QuizzesModule, AuthModule, QuestionsModule, ChoicesModule, CoursesModule, StudentsModule],
   controllers: [],
   providers: [PrismaService],
 })

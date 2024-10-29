@@ -21,9 +21,7 @@ export class ChoicesService {
     const question = await this.PrismaService.question.findUnique({
       where: { id: questionId },
     });
-    if (!question)
-      throw new NotFoundException(`Question with ID ${questionId} not found!`);
-
+    
     // check quiz owner
     const quiz = await this.PrismaService.quiz.findUnique({
       where: { id: question.quizId },
@@ -57,16 +55,12 @@ export class ChoicesService {
     const choice = await this.PrismaService.choice.findUnique({
       where: { id: choiceId },
     });
-    if (!choice)
-      throw new NotFoundException(`Choice with ID ${choiceId} not found!`);
-
+    
     // check if question exist
     const question = await this.PrismaService.question.findUnique({
       where: { id: questionId },
     });
-    if (!question)
-      throw new NotFoundException(`Question with ID ${questionId} not found!`);
-
+  
     // check quiz owner
     const quiz = await this.PrismaService.quiz.findUnique({
       where: { id: question.quizId },
@@ -94,15 +88,12 @@ export class ChoicesService {
         const choice = await this.PrismaService.choice.findUnique({
           where: { id: choiceId },
         });
-        if (!choice)
-          throw new NotFoundException(`Choice with ID ${choiceId} not found!`);
-
+        
         // check if question exist
         const question = await this.PrismaService.question.findUnique({
           where: { id: questionId },
         });
-        if (!question)
-          throw new NotFoundException(`Question with ID ${questionId} not found!`);
+        
 
         // check quiz owner
         const quiz = await this.PrismaService.quiz.findUnique({
