@@ -90,7 +90,14 @@ export class QuizzesController {
     const studentId = (req.user as User).id;
     return this.quizzesService.getStudentResult(studentId,+quizId);
   }
-
+ @Get(':quizId/students/results')
+  @UseGuards(JwtMiddleware, RolesGuard)
+  @Roles(Role.INSTRUCTOR)
+  findresult(@Param('quizId') quizId: string, @Req() req: Request) {
+    
+    return this.quizzesService.getAllResults(+quizId);
+  }
+  
 
   
 }
