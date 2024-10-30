@@ -3,24 +3,25 @@ import {
     NotFoundException,
     BadRequestException,
 } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import {  PrismaClient } from '@prisma/client';
 import { CreateQuizDto } from './dto/create-quiz.dto';
 import { UpdateQuizDto } from './dto/update-quiz.dto';
 import { SubmitAnswersDto } from './dto/submit-answers.dto';
+
 
 @Injectable()
 export class QuizzesService {
     constructor(private readonly prisma: PrismaClient) { }
 
-    async createQuiz(createQuizDto: CreateQuizDto, instructorId: number) {
+    async createQuiz(courseId: number, createQuizDto: CreateQuizDto, instructorId: number) {
         try {
             return await this.prisma.quiz.create({
                 data: {
                     title: createQuizDto.title,
                     description: createQuizDto.description,
                     type: createQuizDto.type,
-                    courseId:createQuizDto.courseId,
                     instructorId: instructorId,
+                    courseId: courseId
                 },
             });
         } catch (error) {
@@ -86,6 +87,58 @@ export class QuizzesService {
         }
     }
 
+    async getResultQuizService(id: number, studentId: number) {
+
+        const score = await this.prisma.quizAttempt.findFirst({
+            where: {
+                quizId: id,
+                studentId: studentId,
+            },
+        });
+
+        if (!score) {
+            throw new NotFoundException(`No attempt found for quiz ID ${id} by student ID ${studentId}`);
+        }
+
+        return {
+            message: 'Quiz results ',
+            score: score.score,
+        };
+    }
+
+    async getResultQuizStudentsService(id: number, instructorId: number) {
+        const checkInstructor = await this.prisma.quiz.findUnique({
+            where: {
+                id
+            }
+        })
+
+        if (checkInstructor.instructorId !== instructorId) {
+            throw new BadRequestException('You do not have permission to view results of student');
+        }
+
+
+        const retsults = await this.prisma.quizAttempt.findMany({
+            where: {
+                quizId: id,
+            },
+            select: {
+                student: {
+                    select: {
+                        name: true
+                    }
+                },
+                score: true
+            }
+        });
+
+
+        return {
+            message: 'Quiz results ',
+            retsults: retsults
+        };
+    }
+
     private async ensureQuizExists(id: number) {
         const quiz = await this.prisma.quiz.findUnique({
             where: { id },
@@ -97,9 +150,25 @@ export class QuizzesService {
 
         return quiz;
     }
-
     async takeQuiz(quizId: number, studentId: number) {
-        try {
+        try {if (this.prisma.quiz.findFirst({
+            where:{ type :'Final'}
+        })){
+            
+       const  isFinalExamExist=this.prisma.quizAttempt.findUnique({
+        where: {
+            quizId_studentId: {
+              quizId,
+              studentId,
+            },
+          }, }); 
+        if(isFinalExamExist){
+            throw new BadRequestException('you already take final Exam');
+        }}
+        
+        else {
+            
+     
             return await this.prisma.quizAttempt.create({
                 data: {
                     quiz: { connect: { id: quizId } },
@@ -107,48 +176,51 @@ export class QuizzesService {
                     score: 0, // Initialize score; adjust as needed
                 },
             });
-        } catch (error) {
+        }   } catch (error) {
             throw new BadRequestException('Failed to start quiz');
         }
     }
 
-    async submitAnswers(quizId: number, studentId: number, answers: SubmitAnswersDto) {
+
+    async submitQuizAnswers(quizId: number, studentId: number, submitAnswersDto: SubmitAnswersDto) {
+        await this.ensureQuizExists(quizId);
+
+        const existingAttempt = await this.prisma.quizAttempt.findFirst({
+            where: { quizId, studentId },
+        });
+
+        if (!existingAttempt) {
+            throw new BadRequestException('You need to start the quiz before submitting answers.');
+        }
+
+        let scoreStudent = 0;
+        const answers = submitAnswersDto.answers.map((ans) => ({
+            questionId: ans.questionId,
+            studentId,
+            text: ans.answerText,
+        }));
+
         try {
-            // Implement answer saving logic here
-            return { message: 'Answers submitted successfully' };
+            await this.prisma.answer.createMany({ data: answers });
+
+            const correctAnswers = await this.prisma.question.findMany({
+                where: { id: { in: answers.map((ans) => ans.questionId) } },
+                select: { id: true, correctAnswer: true },
+            });
+
+            scoreStudent = answers.reduce((score, answer) => {
+                const correctAnswer = correctAnswers.find((q) => q.id === answer.questionId);
+                return correctAnswer && answer.text === correctAnswer.correctAnswer ? score + 1 : score;
+            }, 0);
+
+            await this.prisma.quizAttempt.update({
+                where: { id: existingAttempt.id },
+                data: { score: scoreStudent },
+            });
+
+            return { message: 'Answers submitted successfully', score: scoreStudent };
         } catch (error) {
             throw new BadRequestException('Failed to submit answers');
         }
     }
-
-
-   async getStudentResult(studentId:number,quizId: number) {
-    try{
-    return await this.prisma.quizAttempt.findFirst({
-        select:{
-            studentId:true, 
-            quizId:true, 
-            score:true,
-        },
-      where:{ quizId,studentId},
-      
-    });}
-  catch{
-    throw new NotFoundException(`Quiz with ID ${quizId} not found`);
-}
-}
-async getAllResults(quizId: number) {
-    try{
-    return await this.prisma.quizAttempt.findMany({
-        select:{
-            studentId:true, 
-            score:true,
-        
-        },
-      where:{ quizId},
-    });}
-  catch{
-    throw new NotFoundException(`Quiz with ID ${quizId} not found`);
-}
-}
 }
