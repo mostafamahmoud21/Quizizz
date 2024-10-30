@@ -161,8 +161,10 @@ export class QuizzesService {
             
      
         if(this.prisma.quizAttempt.findUnique({
-            where: {
-        id:studentId,},
+             where:{
+                quizId_studentId: {
+                quizId:quizId,
+                studentId:studentId,}},
                }) ){
             throw new BadRequestException('you already take final Exam');
         }}
