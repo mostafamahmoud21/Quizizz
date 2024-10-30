@@ -151,21 +151,22 @@ export class QuizzesService {
         return quiz;
     }
     async takeQuiz(quizId: number, studentId: number) {
-        try {if (this.prisma.quiz.findFirst({
-            where:{ type :'Final'}
+        try {if(this.prisma.quiz.findUnique({
+            where:{ 
+                
+                    type :'Final',
+                    id:quizId, 
+                }
         })){
             
-       const  isFinalExamExist=this.prisma.quizAttempt.findUnique({
-        where: {
-            quizId_studentId: {
-              quizId,
-              studentId,
-            },
-          }, }); 
-        if(isFinalExamExist){
+     
+        if(this.prisma.quizAttempt.findUnique({
+            where: {
+        id:studentId,},
+               }) ){
             throw new BadRequestException('you already take final Exam');
         }}
-        
+
         else {
             
      
@@ -178,7 +179,7 @@ export class QuizzesService {
             });
         }   } catch (error) {
             throw new BadRequestException('Failed to start quiz');
-        }
+          }
     }
 
 
