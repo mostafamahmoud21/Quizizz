@@ -149,17 +149,6 @@ export class QuizzesService {
 
         return quiz;
     }
-<<<<<<< HEAD
-    async takeQuiz(quizId: number, studentId: number) {
-        try {
-            return await this.prisma.quizAttempt.create({
-                data: {
-                    quiz: { connect: { id: quizId } },
-                    student: { connect: { id: studentId } },
-                    score: 0, // Initialize score; adjust as needed
-                },
-            });
-=======
 
     async takeQuiz(quizId: number, studentId: number, courseId: number) {
         const enrollment = await this.prisma.enrollment.findFirst({
@@ -167,15 +156,16 @@ export class QuizzesService {
         });
 
         if (!enrollment) {
-            throw new BadRequestException('You need to be enrolled in this course to take the quiz');
+            throw new BadRequestException('You need to be enrolled in this course to take the quiz.');
         }
 
         const quiz = await this.prisma.quiz.findFirst({
             where: { id: quizId, courseId },
+            select: { type: true },
         });
 
         if (!quiz) {
-            throw new BadRequestException('This quiz does not belong to the specified course');
+            throw new BadRequestException('This quiz does not belong to the specified course.');
         }
 
         const existingAttempt = await this.prisma.quizAttempt.findFirst({
@@ -183,7 +173,11 @@ export class QuizzesService {
         });
 
         if (existingAttempt) {
-            throw new BadRequestException('You have already taken this quiz');
+            if (quiz.type === 'Final') {
+                throw new BadRequestException('You have already taken the final exam.');
+            } else {
+                throw new BadRequestException('You have already taken this quiz.');
+            }
         }
 
         try {
@@ -196,19 +190,11 @@ export class QuizzesService {
             });
 
             return { message: 'Quiz started successfully', quizAttempt };
->>>>>>> 66e1d7db664d8fb642bf14abfb28b6a14bd7ba04
         } catch (error) {
-            throw new BadRequestException('Failed to start quiz');
+            throw new BadRequestException('Failed to start quiz: ' + error.message);
         }
     }
-<<<<<<< HEAD
-    async submitAnswers(quizId: number, studentId: number, answers: SubmitAnswersDto) {
-        // Logic to save answers and calculate score if necessary
-        try {
-            // Implement answer saving logic here
-            // For demonstration purposes
-            return { message: 'Answers submitted successfully' };
-=======
+
 
 
     async submitQuizAnswers(quizId: number, studentId: number, submitAnswersDto: SubmitAnswersDto) {
@@ -248,7 +234,6 @@ export class QuizzesService {
             });
 
             return { message: 'Answers submitted successfully', score: scoreStudent };
->>>>>>> 66e1d7db664d8fb642bf14abfb28b6a14bd7ba04
         } catch (error) {
             throw new BadRequestException('Failed to submit answers');
         }
