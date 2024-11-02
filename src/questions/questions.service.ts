@@ -15,7 +15,12 @@ export class QuestionsService {
         instructorId,
       },
     });
-
+await this.prisma.quizQuestion.create({
+  data:{
+    quizId,
+    questionId:createQuestion.id
+  }
+})
     return createQuestion;
   }
 
