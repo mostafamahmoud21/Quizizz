@@ -16,3 +16,4 @@ export class CreateQuizDto {
   @MaxLength(500)
   description: string;
 }
+

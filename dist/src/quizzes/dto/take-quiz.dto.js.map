@@ -1,5 +1,1 @@
-<<<<<<< HEAD:dist/quizzes/dto/take-quiz.dto.js.map
-{"version":3,"file":"take-quiz.dto.js","sourceRoot":"","sources":["../../../src/quizzes/dto/take-quiz.dto.ts"],"names":[],"mappings":";;;;;;;;;;;;AAAA,qDAA6C;AAE7C,MAAa,WAAW;CAGvB;AAHD,kCAGC;AADC;IADC,IAAA,4BAAU,GAAE;;2CACE"}
-=======
 {"version":3,"file":"take-quiz.dto.js","sourceRoot":"","sources":["../../../../src/quizzes/dto/take-quiz.dto.ts"],"names":[],"mappings":";;;;;;;;;;;;AAAA,qDAA6C;AAE7C,MAAa,WAAW;CAGvB;AAHD,kCAGC;AADC;IADC,IAAA,4BAAU,GAAE;;2CACE"}
->>>>>>> 66e1d7db664d8fb642bf14abfb28b6a14bd7ba04:dist/src/quizzes/dto/take-quiz.dto.js.map

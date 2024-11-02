@@ -20,10 +20,7 @@ let ChoicesService = class ChoicesService {
         const question = await this.PrismaService.question.findUnique({
             where: { id: questionId },
         });
-        const quiz = await this.PrismaService.quiz.findUnique({
-            where: { id: question.quizId },
-        });
-        if (quiz.instructorId !== instructorId) {
+        if (question.instructorId !== instructorId) {
             throw new common_1.ForbiddenException(`You don't have permission to add choices to this quiz!`);
         }
         const choice = await this.PrismaService.choice.create({
@@ -41,10 +38,7 @@ let ChoicesService = class ChoicesService {
         const question = await this.PrismaService.question.findUnique({
             where: { id: questionId },
         });
-        const quiz = await this.PrismaService.quiz.findUnique({
-            where: { id: question.quizId },
-        });
-        if (quiz.instructorId !== instructorId)
+        if (question.instructorId !== instructorId)
             throw new common_1.ForbiddenException(`You don't have permission to edit this choices!`);
         const updatedChoice = await this.PrismaService.choice.update({
             where: { id: choiceId },
@@ -59,10 +53,7 @@ let ChoicesService = class ChoicesService {
         const question = await this.PrismaService.question.findUnique({
             where: { id: questionId },
         });
-        const quiz = await this.PrismaService.quiz.findUnique({
-            where: { id: question.quizId },
-        });
-        if (quiz.instructorId !== instructorId)
+        if (question.instructorId !== instructorId)
             throw new common_1.ForbiddenException(`You don't have permission to delete this choice!`);
         const deletedChoice = await this.PrismaService.choice.delete({
             where: { id: choiceId }

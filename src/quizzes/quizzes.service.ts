@@ -40,6 +40,30 @@ export class QuizzesService {
         return this.ensureQuizExists(id);
     }
 
+    async getQuizWithQuestions(quizId: number) {
+        const quiz = await this.prisma.quiz.findUnique({
+            where: { id: quizId },
+            include: {
+                questions: {
+                    include: {
+                        question: { // Access the Question model through QuizQuestion
+                            include: {
+                                choices: true, // Now include choices from the Question model
+                            },
+                        },
+                    },
+                },
+            },
+        });
+    
+        if (!quiz) {
+            throw new NotFoundException('Quiz not found');
+        }
+    
+        return quiz;
+    }
+    
+
     async updateQuiz(id: number, updateQuizDto: UpdateQuizDto, instructorId: number) {
         const quiz = await this.ensureQuizExists(id);
 
@@ -87,7 +111,6 @@ export class QuizzesService {
     }
 
     async getResultQuizService(id: number, studentId: number) {
-
         const score = await this.prisma.quizAttempt.findFirst({
             where: {
                 quizId: id,
@@ -110,14 +133,13 @@ export class QuizzesService {
             where: {
                 id
             }
-        })
+        });
 
         if (checkInstructor.instructorId !== instructorId) {
             throw new BadRequestException('You do not have permission to view results of student');
         }
 
-
-        const retsults = await this.prisma.quizAttempt.findMany({
+        const results = await this.prisma.quizAttempt.findMany({
             where: {
                 quizId: id,
             },
@@ -131,10 +153,9 @@ export class QuizzesService {
             }
         });
 
-
         return {
             message: 'Quiz results ',
-            retsults: retsults
+            results: results
         };
     }
 
@@ -194,8 +215,6 @@ export class QuizzesService {
             throw new BadRequestException('Failed to start quiz: ' + error.message);
         }
     }
-
-
 
     async submitQuizAnswers(quizId: number, studentId: number, submitAnswersDto: SubmitAnswersDto) {
         await this.ensureQuizExists(quizId);

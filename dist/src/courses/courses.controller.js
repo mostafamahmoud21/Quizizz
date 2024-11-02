@@ -14,16 +14,9 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CoursesController = void 0;
 const common_1 = require("@nestjs/common");
-<<<<<<< HEAD:dist/quizzes/quizzes.controller.js
-const quizzes_service_1 = require("./quizzes.service");
-const create_quiz_dto_1 = require("./dto/create-quiz.dto");
-const update_quiz_dto_1 = require("./dto/update-quiz.dto");
-const submit_answers_dto_1 = require("./dto/submit-answers.dto");
-=======
 const courses_service_1 = require("./courses.service");
 const create_course_dto_1 = require("./dto/create-course.dto");
 const update_course_dto_1 = require("./dto/update-course.dto");
->>>>>>> 66e1d7db664d8fb642bf14abfb28b6a14bd7ba04:dist/src/courses/courses.controller.js
 const jwt_middleware_1 = require("../auth/middleware/jwt.middleware");
 const roles_guard_1 = require("../auth/guards/roles.guard");
 const roles_enum_1 = require("../auth/enums/roles.enum");
@@ -38,22 +31,9 @@ let CoursesController = class CoursesController {
         const instructorId = req.user.id;
         return this.coursesService.createCourseServices(createCourseDto, instructorId);
     }
-<<<<<<< HEAD:dist/quizzes/quizzes.controller.js
-    async takeQuiz(quizId, req) {
-        const studentId = req.user.id;
-        return this.quizzesService.takeQuiz(+quizId, studentId);
-    }
-    async submitAnswers(quizId, submitAnswersDto, req) {
-        const studentId = req.user.id;
-        return this.quizzesService.submitAnswers(+quizId, studentId, submitAnswersDto);
-    }
-    findAll() {
-        return this.quizzesService.getQuizzes();
-=======
     findAllCourses(req) {
         const instructorId = req.user.id;
         return this.coursesService.findAllCoursesServices(instructorId);
->>>>>>> 66e1d7db664d8fb642bf14abfb28b6a14bd7ba04:dist/src/courses/courses.controller.js
     }
     findOne(id) {
         return this.coursesService.findOne(+id);
@@ -78,25 +58,6 @@ __decorate([
     __metadata("design:paramtypes", [Object, create_course_dto_1.CreateCourseDto]),
     __metadata("design:returntype", void 0)
 ], CoursesController.prototype, "createCourse", null);
-__decorate([
-    (0, common_1.Post)(':quizId/take'),
-    (0, common_1.UseGuards)(jwt_middleware_1.JwtMiddleware),
-    __param(0, (0, common_1.Param)('quizId')),
-    __param(1, (0, common_1.Req)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object]),
-    __metadata("design:returntype", Promise)
-], QuizzesController.prototype, "takeQuiz", null);
-__decorate([
-    (0, common_1.Post)(':quizId/answers'),
-    (0, common_1.UseGuards)(jwt_middleware_1.JwtMiddleware),
-    __param(0, (0, common_1.Param)('quizId')),
-    __param(1, (0, common_1.Body)()),
-    __param(2, (0, common_1.Req)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, submit_answers_dto_1.SubmitAnswersDto, Object]),
-    __metadata("design:returntype", Promise)
-], QuizzesController.prototype, "submitAnswers", null);
 __decorate([
     (0, common_1.Get)(),
     (0, common_1.UseGuards)(jwt_middleware_1.JwtMiddleware, roles_guard_1.RolesGuard),

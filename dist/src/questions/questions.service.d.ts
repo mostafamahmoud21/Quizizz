@@ -1,52 +1,62 @@
 import { PrismaClient } from '@prisma/client';
-import { CreateQuestionDto } from './dto/create-question-dto';
+import { AutomaticQuestionDto, CreateQuestionDto } from './dto/create-question-dto';
 import { UpdateQuestionDto } from './dto/create-question-dto';
 export declare class QuestionsService {
     private prisma;
     constructor(prisma: PrismaClient);
     createQuestion(quizId: number, createQuestionDto: CreateQuestionDto, instructorId: number): Promise<{
         id: number;
+        instructorId: number;
         createdAt: Date;
         updatedAt: Date;
-        quizId: number;
         text: string;
         level: import(".prisma/client").$Enums.Levels;
         correctAnswer: string;
     }>;
-    getQuestions(quizId: number): Promise<{
+    createOnlyQuestion(createQuestionDto: CreateQuestionDto, instructorId: number): Promise<{
         id: number;
+        instructorId: number;
         createdAt: Date;
         updatedAt: Date;
-        quizId: number;
+        text: string;
+        level: import(".prisma/client").$Enums.Levels;
+        correctAnswer: string;
+    }>;
+    getQuestions(quizId: number, instructorId: number): Promise<{
+        id: number;
+        instructorId: number;
+        createdAt: Date;
+        updatedAt: Date;
         text: string;
         level: import(".prisma/client").$Enums.Levels;
         correctAnswer: string;
     }[]>;
-    getQuestionById(quizId: number, questionId: number): Promise<{
+    getQuestionById(instructorId: number, questionId: number): Promise<{
         id: number;
+        instructorId: number;
         createdAt: Date;
         updatedAt: Date;
-        quizId: number;
         text: string;
         level: import(".prisma/client").$Enums.Levels;
         correctAnswer: string;
     }>;
-    updateQuestion(quizId: number, questionId: number, updateQuestionDto: UpdateQuestionDto, instructorId: number): Promise<{
+    updateQuestion(questionId: number, updateQuestionDto: UpdateQuestionDto, instructorId: number): Promise<{
         id: number;
+        instructorId: number;
         createdAt: Date;
         updatedAt: Date;
-        quizId: number;
         text: string;
         level: import(".prisma/client").$Enums.Levels;
         correctAnswer: string;
     }>;
-    deleteQuestion(quizId: number, questionId: number, instructorId: number): Promise<{
+    deleteQuestion(questionId: number, instructorId: number): Promise<{
         id: number;
+        instructorId: number;
         createdAt: Date;
         updatedAt: Date;
-        quizId: number;
         text: string;
         level: import(".prisma/client").$Enums.Levels;
         correctAnswer: string;
     }>;
+    automaticQuestion(quizId: number, automaticQuestionDto: AutomaticQuestionDto, instructorId: number): Promise<any[]>;
 }

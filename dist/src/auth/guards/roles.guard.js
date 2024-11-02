@@ -23,6 +23,8 @@ let RolesGuard = class RolesGuard {
         }
         const request = context.switchToHttp().getRequest();
         const user = request.user;
+        console.log('User:', user);
+        console.log('Required Roles:', roles);
         if (!user || !roles.includes(user.role)) {
             throw new common_1.ForbiddenException('Access denied');
         }

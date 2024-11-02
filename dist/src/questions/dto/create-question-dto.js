@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UpdateQuestionDto = exports.CreateQuestionDto = void 0;
+exports.AutomaticQuestionDto = exports.UpdateQuestionDto = exports.CreateQuestionDto = void 0;
 const class_validator_1 = require("class-validator");
 const levels_enum_1 = require("../../auth/enums/levels.enum");
 class CreateQuestionDto {
@@ -50,4 +50,12 @@ __decorate([
     (0, class_validator_1.IsEnum)(levels_enum_1.Levels, { message: 'Level must be either Easy, Medium, or Hard' }),
     __metadata("design:type", String)
 ], UpdateQuestionDto.prototype, "level", void 0);
+class AutomaticQuestionDto {
+}
+exports.AutomaticQuestionDto = AutomaticQuestionDto;
+__decorate([
+    (0, class_validator_1.IsInt)(),
+    (0, class_validator_1.IsPositive)(),
+    __metadata("design:type", Number)
+], AutomaticQuestionDto.prototype, "numberOfQuestion", void 0);
 //# sourceMappingURL=create-question-dto.js.map

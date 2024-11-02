@@ -1,6 +1,6 @@
 import { Body, Controller, Param, ParseIntPipe, Post, Delete, Put, Get, UseGuards, Req, UsePipes } from '@nestjs/common';
 import { QuestionsService } from './questions.service';
-import { CreateQuestionDto } from './dto/create-question-dto';
+import { AutomaticQuestionDto, CreateQuestionDto } from './dto/create-question-dto';
 import { UpdateQuestionDto } from './dto/create-question-dto';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from '../auth/enums/roles.enum';
@@ -12,9 +12,9 @@ import { NotFoundGuard } from './guards/not-found';
 import { ValidationPipe } from './pipes/numeric-id.pipe';
 import { NotFoundGuardqQuestions } from './guards/not-found-questions';
 
-@Controller('quizzes/:quizId/questions')
+@Controller('/questions')
 export class QuestionsController {
-  constructor(private readonly questionsService: QuestionsService) { }
+  constructor(private readonly questionsService: QuestionsService) {}
 
   // Create a question
   @Post()
@@ -22,7 +22,7 @@ export class QuestionsController {
   @Roles(Role.INSTRUCTOR)
   @UseGuards(NotFoundGuard)
   @UsePipes(ValidationPipe)
-  async createQuestion(
+  async create(
     @Req() req: Request,
     @Param('quizId', ParseIntPipe) quizId: number,
     @Body() createQuestionDto: CreateQuestionDto,
@@ -31,53 +31,87 @@ export class QuestionsController {
     return this.questionsService.createQuestion(quizId, createQuestionDto, instructorId);
   }
 
+  // Create only a question
+  @Post('only')
+  @UseGuards(JwtMiddleware, RolesGuard)
+  @Roles(Role.INSTRUCTOR)
+ 
+  async createWithoutQuiz(
+    @Req() req: Request,
+    @Body() createQuestionDto: CreateQuestionDto,
+  ) {
+    const instructorId = (req.user as User).id;
+    return this.questionsService.createOnlyQuestion(createQuestionDto, instructorId);
+  }
+
   // Get all questions for a quiz
   @Get()
+  @UseGuards(JwtMiddleware, RolesGuard)
+  @Roles(Role.INSTRUCTOR)
   @UseGuards(NotFoundGuard)
   @UsePipes(ValidationPipe)
-  async getQuestions(@Param('quizId', ParseIntPipe) quizId: number) {
-    return this.questionsService.getQuestions(quizId);
+  async findAll(
+    @Param('quizId', ParseIntPipe) quizId: number,
+    @Req() req: Request
+  ) {
+    const instructorId = (req.user as User).id;
+    return this.questionsService.getQuestions(quizId, instructorId);
   }
 
   // Get a specific question by ID
   @Get(':questionId')
-  @UseGuards(NotFoundGuard,NotFoundGuardqQuestions)
+  @UseGuards(JwtMiddleware, RolesGuard, NotFoundGuardqQuestions)
+  @Roles(Role.INSTRUCTOR)
   @UsePipes(ValidationPipe)
-  async getQuestionById(
-    @Param('quizId', ParseIntPipe) quizId: number,
+  async findOne(
+    @Req() req: Request,
     @Param('questionId', ParseIntPipe) questionId: number,
   ) {
-    return this.questionsService.getQuestionById(quizId, questionId);
+    const instructorId = (req.user as User).id;
+    return this.questionsService.getQuestionById(instructorId, questionId);
   }
 
   // Update a question
   @Put(':questionId')
   @UseGuards(JwtMiddleware, RolesGuard)
   @Roles(Role.INSTRUCTOR)
-  @UseGuards(NotFoundGuard,NotFoundGuardqQuestions)
+  @UseGuards(NotFoundGuardqQuestions)
   @UsePipes(ValidationPipe)
-  async updateQuestion(
+  async update(
     @Req() req: Request,
-    @Param('quizId', ParseIntPipe) quizId: number,
     @Param('questionId', ParseIntPipe) questionId: number,
     @Body() updateQuestionDto: UpdateQuestionDto,
   ) {
     const instructorId = (req.user as User).id;
-    return this.questionsService.updateQuestion(quizId, questionId, updateQuestionDto, instructorId);
+    return this.questionsService.updateQuestion(questionId, updateQuestionDto, instructorId);
   }
 
   // Delete a question
   @Delete(':questionId')
   @UseGuards(JwtMiddleware, RolesGuard)
   @Roles(Role.INSTRUCTOR)
-  @UseGuards(NotFoundGuard,NotFoundGuardqQuestions)
+  @UseGuards(NotFoundGuardqQuestions)
   @UsePipes(ValidationPipe)
-  async deleteQuestion(
+  async remove(
     @Req() req: Request,
-    @Param('quizId', ParseIntPipe) quizId: number,
     @Param('questionId', ParseIntPipe) questionId: number,
   ) {
     const instructorId = (req.user as User).id;
-    return this.questionsService.deleteQuestion(quizId, questionId, instructorId);
+    return this.questionsService.deleteQuestion(questionId, instructorId);
+  }
+
+  // Create an automatic question
+  @Post('automatic/:quizId')
+  @UseGuards(JwtMiddleware, RolesGuard)
+  @Roles(Role.INSTRUCTOR)
+  // @UseGuards(NotFoundGuard)
+  // @UsePipes(ValidationPipe)
+  async createAutomatic(
+    @Req() req: Request,
+    @Param('quizId', ParseIntPipe) quizId: number,
+    @Body() automaticQuestionDto: AutomaticQuestionDto,
+  ) {
+    const instructorId = (req.user as User).id;
+    return this.questionsService.automaticQuestion(quizId, automaticQuestionDto, instructorId);
   }
 }

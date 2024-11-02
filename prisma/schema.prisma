@@ -17,8 +17,9 @@ model Instructor {
   updatedAt DateTime @updatedAt
 
   // Relations
-  quizzes Quiz[]
-  courses Course[] // An instructor can create multiple courses
+  quizzes   Quiz[]       // علاقة مع الاختبارات
+  courses   Course[]     // علاقة مع الدورات التي يمكن للمدرس إنشاؤها
+  questions Question[]    // علاقة مع الأسئلة التي أنشأها المدرس
 }
 
 model Student {
@@ -31,9 +32,9 @@ model Student {
   updatedAt DateTime @updatedAt
 
   // Relations
-  enrollments Enrollment[] // Many-to-many relationship between students and courses
-  QuizAttempt QuizAttempt[]
-  answers     Answer[]      // A student can provide multiple answers
+  enrollments Enrollment[] // علاقة كثيرة إلى كثيرة بين الطلاب والدورات
+  QuizAttempt QuizAttempt[] // علاقة مع محاولات الاختبار
+  answers     Answer[]      // علاقة مع الإجابات التي قدمها الطالب
 }
 
 enum Role {
@@ -51,8 +52,8 @@ model Course {
   updatedAt    DateTime   @updatedAt
 
   // Relations
-  enrollments Enrollment[] // Many-to-many relationship with students
-  quizzes     Quiz[]       // A course can have multiple quizzes
+  enrollments Enrollment[] // علاقة كثيرة إلى كثيرة مع الطلاب
+  quizzes     Quiz[]       // علاقة مع الاختبارات الخاصة بالدورة
 }
 
 model Enrollment {
@@ -76,32 +77,41 @@ model Quiz {
   course       Course     @relation(fields: [courseId], references: [id])
   type         Types
   createdAt    DateTime   @default(now())
-  updatedAt    DateTime @updatedAt
+  updatedAt    DateTime   @updatedAt
 
   // Relations
-  questions Question[]      // A quiz can have multiple questions
-  QuizAttempt QuizAttempt[]  // A quiz can have multiple attempts
+  QuizAttempt QuizAttempt[]  // علاقة مع محاولات الاختبار
+  questions   QuizQuestion[]  // علاقة مع الأسئلة في الاختبار
 }
 
 model Question {
-  id        Int      @id @default(autoincrement())
-  text      String
-  quizId    Int
-  quiz      Quiz     @relation(fields: [quizId], references: [id])
-  level     Levels
+  id            Int           @id @default(autoincrement())
+  text          String
+  level         Levels
   correctAnswer String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
 
   // Relations
-  choices Choice[]  // A question can have multiple choices
-  answers Answer[]  // A question can have multiple answers
+  choices       Choice[]      // علاقة مع الخيارات
+  answers       Answer[]      // علاقة مع الإجابات
+  quizzes       QuizQuestion[] // علاقة مع الأسئلة في الاختبارات
+  instructorId  Int           // Foreign key to Instructor
+  instructor    Instructor    @relation(fields: [instructorId], references: [id]) // علاقة مع نموذج Instructor
+}
+
+model QuizQuestion {
+  quizId     Int
+  questionId Int
+  quiz       Quiz     @relation(fields: [quizId], references: [id])
+  question   Question @relation(fields: [questionId], references: [id])
+
+  @@id([quizId, questionId]) // Composite primary key
 }
 
 model Choice {
-  id         Int    @id @default(autoincrement())
+  id         Int      @id @default(autoincrement())
   text       String
- 
   questionId Int
   question   Question @relation(fields: [questionId], references: [id])
   createdAt  DateTime @default(now())
@@ -120,10 +130,9 @@ model QuizAttempt {
   @@unique([quizId, studentId]) // Composite unique constraint
 }
 
-// New Answer model
 model Answer {
   id          Int      @id @default(autoincrement())
-  text        String   // The text of the answer
+  text        String
   questionId  Int
   question    Question @relation(fields: [questionId], references: [id])
   studentId   Int

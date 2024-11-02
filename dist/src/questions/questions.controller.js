@@ -28,23 +28,33 @@ let QuestionsController = class QuestionsController {
     constructor(questionsService) {
         this.questionsService = questionsService;
     }
-    async createQuestion(req, quizId, createQuestionDto) {
+    async create(req, quizId, createQuestionDto) {
         const instructorId = req.user.id;
         return this.questionsService.createQuestion(quizId, createQuestionDto, instructorId);
     }
-    async getQuestions(quizId) {
-        return this.questionsService.getQuestions(quizId);
-    }
-    async getQuestionById(quizId, questionId) {
-        return this.questionsService.getQuestionById(quizId, questionId);
-    }
-    async updateQuestion(req, quizId, questionId, updateQuestionDto) {
+    async createWithoutQuiz(req, createQuestionDto) {
         const instructorId = req.user.id;
-        return this.questionsService.updateQuestion(quizId, questionId, updateQuestionDto, instructorId);
+        return this.questionsService.createOnlyQuestion(createQuestionDto, instructorId);
     }
-    async deleteQuestion(req, quizId, questionId) {
+    async findAll(quizId, req) {
         const instructorId = req.user.id;
-        return this.questionsService.deleteQuestion(quizId, questionId, instructorId);
+        return this.questionsService.getQuestions(quizId, instructorId);
+    }
+    async findOne(req, questionId) {
+        const instructorId = req.user.id;
+        return this.questionsService.getQuestionById(instructorId, questionId);
+    }
+    async update(req, questionId, updateQuestionDto) {
+        const instructorId = req.user.id;
+        return this.questionsService.updateQuestion(questionId, updateQuestionDto, instructorId);
+    }
+    async remove(req, questionId) {
+        const instructorId = req.user.id;
+        return this.questionsService.deleteQuestion(questionId, instructorId);
+    }
+    async createAutomatic(req, quizId, automaticQuestionDto) {
+        const instructorId = req.user.id;
+        return this.questionsService.automaticQuestion(quizId, automaticQuestionDto, instructorId);
     }
 };
 exports.QuestionsController = QuestionsController;
@@ -60,55 +70,78 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Number, create_question_dto_1.CreateQuestionDto]),
     __metadata("design:returntype", Promise)
-], QuestionsController.prototype, "createQuestion", null);
+], QuestionsController.prototype, "create", null);
+__decorate([
+    (0, common_1.Post)('only'),
+    (0, common_1.UseGuards)(jwt_middleware_1.JwtMiddleware, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)(roles_enum_1.Role.INSTRUCTOR),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, create_question_dto_1.CreateQuestionDto]),
+    __metadata("design:returntype", Promise)
+], QuestionsController.prototype, "createWithoutQuiz", null);
 __decorate([
     (0, common_1.Get)(),
+    (0, common_1.UseGuards)(jwt_middleware_1.JwtMiddleware, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)(roles_enum_1.Role.INSTRUCTOR),
     (0, common_1.UseGuards)(not_found_1.NotFoundGuard),
     (0, common_1.UsePipes)(numeric_id_pipe_1.ValidationPipe),
     __param(0, (0, common_1.Param)('quizId', common_1.ParseIntPipe)),
+    __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
+    __metadata("design:paramtypes", [Number, Object]),
     __metadata("design:returntype", Promise)
-], QuestionsController.prototype, "getQuestions", null);
+], QuestionsController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)(':questionId'),
-    (0, common_1.UseGuards)(not_found_1.NotFoundGuard, not_found_questions_1.NotFoundGuardqQuestions),
+    (0, common_1.UseGuards)(jwt_middleware_1.JwtMiddleware, roles_guard_1.RolesGuard, not_found_questions_1.NotFoundGuardqQuestions),
+    (0, roles_decorator_1.Roles)(roles_enum_1.Role.INSTRUCTOR),
     (0, common_1.UsePipes)(numeric_id_pipe_1.ValidationPipe),
-    __param(0, (0, common_1.Param)('quizId', common_1.ParseIntPipe)),
+    __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Param)('questionId', common_1.ParseIntPipe)),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Number]),
+    __metadata("design:paramtypes", [Object, Number]),
     __metadata("design:returntype", Promise)
-], QuestionsController.prototype, "getQuestionById", null);
+], QuestionsController.prototype, "findOne", null);
 __decorate([
     (0, common_1.Put)(':questionId'),
     (0, common_1.UseGuards)(jwt_middleware_1.JwtMiddleware, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(roles_enum_1.Role.INSTRUCTOR),
-    (0, common_1.UseGuards)(not_found_1.NotFoundGuard, not_found_questions_1.NotFoundGuardqQuestions),
+    (0, common_1.UseGuards)(not_found_questions_1.NotFoundGuardqQuestions),
     (0, common_1.UsePipes)(numeric_id_pipe_1.ValidationPipe),
     __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Param)('quizId', common_1.ParseIntPipe)),
-    __param(2, (0, common_1.Param)('questionId', common_1.ParseIntPipe)),
-    __param(3, (0, common_1.Body)()),
+    __param(1, (0, common_1.Param)('questionId', common_1.ParseIntPipe)),
+    __param(2, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Number, Number, create_question_dto_2.UpdateQuestionDto]),
+    __metadata("design:paramtypes", [Object, Number, create_question_dto_2.UpdateQuestionDto]),
     __metadata("design:returntype", Promise)
-], QuestionsController.prototype, "updateQuestion", null);
+], QuestionsController.prototype, "update", null);
 __decorate([
     (0, common_1.Delete)(':questionId'),
     (0, common_1.UseGuards)(jwt_middleware_1.JwtMiddleware, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(roles_enum_1.Role.INSTRUCTOR),
-    (0, common_1.UseGuards)(not_found_1.NotFoundGuard, not_found_questions_1.NotFoundGuardqQuestions),
+    (0, common_1.UseGuards)(not_found_questions_1.NotFoundGuardqQuestions),
     (0, common_1.UsePipes)(numeric_id_pipe_1.ValidationPipe),
     __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Param)('quizId', common_1.ParseIntPipe)),
-    __param(2, (0, common_1.Param)('questionId', common_1.ParseIntPipe)),
+    __param(1, (0, common_1.Param)('questionId', common_1.ParseIntPipe)),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Number, Number]),
+    __metadata("design:paramtypes", [Object, Number]),
     __metadata("design:returntype", Promise)
-], QuestionsController.prototype, "deleteQuestion", null);
+], QuestionsController.prototype, "remove", null);
+__decorate([
+    (0, common_1.Post)('automatic/:quizId'),
+    (0, common_1.UseGuards)(jwt_middleware_1.JwtMiddleware, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)(roles_enum_1.Role.INSTRUCTOR),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Param)('quizId', common_1.ParseIntPipe)),
+    __param(2, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Number, create_question_dto_1.AutomaticQuestionDto]),
+    __metadata("design:returntype", Promise)
+], QuestionsController.prototype, "createAutomatic", null);
 exports.QuestionsController = QuestionsController = __decorate([
-    (0, common_1.Controller)('quizzes/:quizId/questions'),
+    (0, common_1.Controller)('/questions'),
     __metadata("design:paramtypes", [questions_service_1.QuestionsService])
 ], QuestionsController);
 //# sourceMappingURL=questions.controller.js.map

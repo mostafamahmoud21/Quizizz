@@ -13,10 +13,6 @@ import {
 import { QuizzesService } from './quizzes.service';
 import { CreateQuizDto } from './dto/create-quiz.dto';
 import { UpdateQuizDto } from './dto/update-quiz.dto';
-<<<<<<< HEAD
-import { TakeQuizDto } from './dto/take-quiz.dto';
-=======
->>>>>>> 66e1d7db664d8fb642bf14abfb28b6a14bd7ba04
 import { SubmitAnswersDto } from './dto/submit-answers.dto';
 import { JwtMiddleware } from 'src/auth/middleware/jwt.middleware';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
@@ -38,33 +34,12 @@ export class QuizzesController {
         const instructorId = (req.user as User).id;
         return this.quizzesService.createQuiz(+courseId, createQuizDto, +instructorId);
     }
-
-<<<<<<< HEAD
-  @Post(':quizId/take')
-  @UseGuards(JwtMiddleware)
-  async takeQuiz(@Param('quizId') quizId: string, @Req() req: Request) {
-    const studentId = (req.user as User).id;
-    return this.quizzesService.takeQuiz(+quizId, studentId);
-  }
-
-  @Post(':quizId/answers')
-  @UseGuards(JwtMiddleware)
-  async submitAnswers(
-    @Param('quizId') quizId: string,
-    @Body() submitAnswersDto: SubmitAnswersDto,
-    @Req() req: Request
-  ) {
-    const studentId = (req.user as User).id;
-    return this.quizzesService.submitAnswers(+quizId, studentId, submitAnswersDto);
-  }
-
-  @Get()
-  @UseGuards(JwtMiddleware, RolesGuard)
-  @Roles(Role.INSTRUCTOR)
-  findAll() {
-    return this.quizzesService.getQuizzes();
-  }
-=======
+    @Get(':quizId')
+    @UseGuards(JwtMiddleware)
+    @Roles(Role.STUDENT, Role.INSTRUCTOR)
+    async getQuizWithQuestions(@Param('quizId') quizId: number) {
+        return this.quizzesService.getQuizWithQuestions(+quizId);
+    }
     @Post('/:courseId/:quizId/take')
     @UseGuards(JwtMiddleware)
     @Roles(Role.STUDENT)
@@ -72,7 +47,6 @@ export class QuizzesController {
         const studentId = (req.user as User).id;
         return this.quizzesService.takeQuiz(+quizId, studentId,+courseId);
     }
->>>>>>> 66e1d7db664d8fb642bf14abfb28b6a14bd7ba04
 
     @Post(':quizId/answers')
     @UseGuards(JwtMiddleware)
@@ -82,7 +56,7 @@ export class QuizzesController {
         @Body() submitAnswersDto: SubmitAnswersDto
     ) {
         const studentId = (req.user as User).id;
-        return this.quizzesService.submitQuizAnswers(+quizId, studentId, submitAnswersDto);
+        return this.quizzesService.submitQuizAnswers(+quizId, studentId, submitAnswersDto,);
     }
 
     @Get()

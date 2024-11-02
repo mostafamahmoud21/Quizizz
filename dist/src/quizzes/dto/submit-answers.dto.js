@@ -11,8 +11,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SubmitAnswersDto = void 0;
 const class_validator_1 = require("class-validator");
-<<<<<<< HEAD:dist/quizzes/dto/submit-answers.dto.js
-=======
 const class_transformer_1 = require("class-transformer");
 class AnswerDto {
 }
@@ -24,19 +22,13 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], AnswerDto.prototype, "answerText", void 0);
->>>>>>> 66e1d7db664d8fb642bf14abfb28b6a14bd7ba04:dist/src/quizzes/dto/submit-answers.dto.js
 class SubmitAnswersDto {
 }
 exports.SubmitAnswersDto = SubmitAnswersDto;
 __decorate([
-<<<<<<< HEAD:dist/quizzes/dto/submit-answers.dto.js
-    (0, class_validator_1.IsArray)({ message: 'answers must be an array' }),
-    (0, class_validator_1.IsNotEmpty)({ message: 'answers should not be empty' }),
-=======
     (0, class_validator_1.IsArray)(),
     (0, class_validator_1.ValidateNested)({ each: true }),
     (0, class_transformer_1.Type)(() => AnswerDto),
->>>>>>> 66e1d7db664d8fb642bf14abfb28b6a14bd7ba04:dist/src/quizzes/dto/submit-answers.dto.js
     __metadata("design:type", Array)
 ], SubmitAnswersDto.prototype, "answers", void 0);
 //# sourceMappingURL=submit-answers.dto.js.map

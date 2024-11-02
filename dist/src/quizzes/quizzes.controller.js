@@ -32,6 +32,9 @@ let QuizzesController = class QuizzesController {
         const instructorId = req.user.id;
         return this.quizzesService.createQuiz(+courseId, createQuizDto, +instructorId);
     }
+    async getQuizWithQuestions(quizId) {
+        return this.quizzesService.getQuizWithQuestions(+quizId);
+    }
     startQuiz(courseId, quizId, req) {
         const studentId = req.user.id;
         return this.quizzesService.takeQuiz(+quizId, studentId, +courseId);
@@ -75,6 +78,15 @@ __decorate([
     __metadata("design:paramtypes", [Number, Object, create_quiz_dto_1.CreateQuizDto]),
     __metadata("design:returntype", void 0)
 ], QuizzesController.prototype, "createQuiz", null);
+__decorate([
+    (0, common_1.Get)(':quizId'),
+    (0, common_1.UseGuards)(jwt_middleware_1.JwtMiddleware),
+    (0, roles_decorator_1.Roles)(roles_enum_1.Role.STUDENT, roles_enum_1.Role.INSTRUCTOR),
+    __param(0, (0, common_1.Param)('quizId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], QuizzesController.prototype, "getQuizWithQuestions", null);
 __decorate([
     (0, common_1.Post)('/:courseId/:quizId/take'),
     (0, common_1.UseGuards)(jwt_middleware_1.JwtMiddleware),

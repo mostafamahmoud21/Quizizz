@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsOptional, IsEnum } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsEnum, IsInt, IsPositive } from 'class-validator';
 import { Levels } from 'src/auth/enums/levels.enum';
 
 export class CreateQuestionDto {
@@ -8,7 +8,7 @@ export class CreateQuestionDto {
 
     @IsString()
     @IsNotEmpty()
-    correctAnswer:string;
+    correctAnswer: string;
     // @IsInt()
     // quizId: number; // Ensure quizId is an integer
     @IsEnum(Levels, { message: 'Level must be either Easy, Medium, or Hard' })
@@ -18,14 +18,14 @@ export class CreateQuestionDto {
 
 export class UpdateQuestionDto {
     @IsString()
-    @IsOptional() 
+    @IsOptional()
     @IsNotEmpty()
     text?: string;
 
     @IsString()
-    @IsOptional() 
+    @IsOptional()
     @IsNotEmpty()
-    correctAnswer?:string;
+    correctAnswer?: string;
 
     @IsNotEmpty()
     @IsOptional()
@@ -33,4 +33,9 @@ export class UpdateQuestionDto {
     level?: Levels;
 }
 
+export class AutomaticQuestionDto {
+    @IsInt()
+    @IsPositive()
+    numberOfQuestion: number;
+}
 

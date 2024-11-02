@@ -43,6 +43,26 @@ let QuizzesService = class QuizzesService {
     async getQuizById(id) {
         return this.ensureQuizExists(id);
     }
+    async getQuizWithQuestions(quizId) {
+        const quiz = await this.prisma.quiz.findUnique({
+            where: { id: quizId },
+            include: {
+                questions: {
+                    include: {
+                        question: {
+                            include: {
+                                choices: true,
+                            },
+                        },
+                    },
+                },
+            },
+        });
+        if (!quiz) {
+            throw new common_1.NotFoundException('Quiz not found');
+        }
+        return quiz;
+    }
     async updateQuiz(id, updateQuizDto, instructorId) {
         const quiz = await this.ensureQuizExists(id);
         if (quiz.instructorId !== instructorId) {
@@ -107,7 +127,7 @@ let QuizzesService = class QuizzesService {
         if (checkInstructor.instructorId !== instructorId) {
             throw new common_1.BadRequestException('You do not have permission to view results of student');
         }
-        const retsults = await this.prisma.quizAttempt.findMany({
+        const results = await this.prisma.quizAttempt.findMany({
             where: {
                 quizId: id,
             },
@@ -122,7 +142,7 @@ let QuizzesService = class QuizzesService {
         });
         return {
             message: 'Quiz results ',
-            retsults: retsults
+            results: results
         };
     }
     async ensureQuizExists(id) {
@@ -139,19 +159,25 @@ let QuizzesService = class QuizzesService {
             where: { studentId, courseId },
         });
         if (!enrollment) {
-            throw new common_1.BadRequestException('You need to be enrolled in this course to take the quiz');
+            throw new common_1.BadRequestException('You need to be enrolled in this course to take the quiz.');
         }
         const quiz = await this.prisma.quiz.findFirst({
             where: { id: quizId, courseId },
+            select: { type: true },
         });
         if (!quiz) {
-            throw new common_1.BadRequestException('This quiz does not belong to the specified course');
+            throw new common_1.BadRequestException('This quiz does not belong to the specified course.');
         }
         const existingAttempt = await this.prisma.quizAttempt.findFirst({
             where: { quizId, studentId },
         });
         if (existingAttempt) {
-            throw new common_1.BadRequestException('You have already taken this quiz');
+            if (quiz.type === 'Final') {
+                throw new common_1.BadRequestException('You have already taken the final exam.');
+            }
+            else {
+                throw new common_1.BadRequestException('You have already taken this quiz.');
+            }
         }
         try {
             const quizAttempt = await this.prisma.quizAttempt.create({
@@ -164,7 +190,7 @@ let QuizzesService = class QuizzesService {
             return { message: 'Quiz started successfully', quizAttempt };
         }
         catch (error) {
-            throw new common_1.BadRequestException('Failed to start quiz');
+            throw new common_1.BadRequestException('Failed to start quiz: ' + error.message);
         }
     }
     async submitQuizAnswers(quizId, studentId, submitAnswersDto) {

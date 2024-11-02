@@ -12,7 +12,13 @@ const courses_service_1 = require("./courses.service");
 const courses_controller_1 = require("./courses.controller");
 const auth_module_1 = require("../auth/auth.module");
 const client_1 = require("@prisma/client");
+const jwt_middleware_1 = require("../auth/middleware/jwt.middleware");
 let CoursesModule = class CoursesModule {
+    configure(consumer) {
+        consumer
+            .apply(jwt_middleware_1.JwtMiddleware)
+            .forRoutes(courses_controller_1.CoursesController);
+    }
 };
 exports.CoursesModule = CoursesModule;
 exports.CoursesModule = CoursesModule = __decorate([

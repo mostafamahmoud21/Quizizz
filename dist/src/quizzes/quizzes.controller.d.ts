@@ -16,6 +16,39 @@ export declare class QuizzesController {
         createdAt: Date;
         updatedAt: Date;
     }>;
+    getQuizWithQuestions(quizId: number): Promise<{
+        questions: ({
+            question: {
+                choices: {
+                    questionId: number;
+                    id: number;
+                    createdAt: Date;
+                    updatedAt: Date;
+                    text: string;
+                }[];
+            } & {
+                id: number;
+                instructorId: number;
+                createdAt: Date;
+                updatedAt: Date;
+                text: string;
+                level: import(".prisma/client").$Enums.Levels;
+                correctAnswer: string;
+            };
+        } & {
+            questionId: number;
+            quizId: number;
+        })[];
+    } & {
+        title: string;
+        type: import(".prisma/client").$Enums.Types;
+        description: string;
+        id: number;
+        instructorId: number;
+        courseId: number;
+        createdAt: Date;
+        updatedAt: Date;
+    }>;
     startQuiz(courseId: number, quizId: number, req: Request): Promise<{
         message: string;
         quizAttempt: {
@@ -69,7 +102,7 @@ export declare class QuizzesController {
     }>;
     getAllStudentsQuizResults(req: Request, id: number): Promise<{
         message: string;
-        retsults: {
+        results: {
             score: number;
             student: {
                 name: string;

@@ -9,3 +9,6 @@ export declare class UpdateQuestionDto {
     correctAnswer?: string;
     level?: Levels;
 }
+export declare class AutomaticQuestionDto {
+    numberOfQuestion: number;
+}

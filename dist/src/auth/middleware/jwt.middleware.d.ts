@@ -1,7 +1,9 @@
-import { CanActivate, ExecutionContext } from '@nestjs/common';
+import { NestMiddleware } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-export declare class JwtMiddleware implements CanActivate {
+import { Request, Response, NextFunction } from 'express';
+export declare class JwtMiddleware implements NestMiddleware {
     private readonly jwtService;
     constructor(jwtService: JwtService);
-    canActivate(context: ExecutionContext): boolean;
+    use(req: Request, res: Response, next: NextFunction): void;
+    private extractTokenFromHeader;
 }

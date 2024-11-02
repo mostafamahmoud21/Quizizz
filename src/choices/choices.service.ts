@@ -22,11 +22,7 @@ export class ChoicesService {
       where: { id: questionId },
     });
     
-    // check quiz owner
-    const quiz = await this.PrismaService.quiz.findUnique({
-      where: { id: question.quizId },
-    });
-    if (quiz.instructorId !== instructorId) {
+    if (question.instructorId !== instructorId) {
       throw new ForbiddenException(
         `You don't have permission to add choices to this quiz!`,
       );
@@ -62,10 +58,7 @@ export class ChoicesService {
     });
   
     // check quiz owner
-    const quiz = await this.PrismaService.quiz.findUnique({
-      where: { id: question.quizId },
-    });
-    if (quiz.instructorId !== instructorId)
+    if (question.instructorId !== instructorId)
       throw new ForbiddenException(`You don't have permission to edit this choices!`,);
 
     // Update choice
@@ -95,11 +88,7 @@ export class ChoicesService {
         });
         
 
-        // check quiz owner
-        const quiz = await this.PrismaService.quiz.findUnique({
-          where: { id: question.quizId },
-        });
-        if (quiz.instructorId !== instructorId)
+        if (question.instructorId !== instructorId)
           throw new ForbiddenException(`You don't have permission to delete this choice!`,);
 
         // delete choice

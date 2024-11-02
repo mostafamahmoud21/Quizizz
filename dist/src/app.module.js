@@ -12,17 +12,24 @@ const quizzes_module_1 = require("./quizzes/quizzes.module");
 const auth_module_1 = require("./auth/auth.module");
 const questions_module_1 = require("./questions/questions.module");
 const choices_module_1 = require("./choices/choices.module");
-const dotenv = require("dotenv");
-const prisma_service_1 = require("./prisma/prisma.service");
 const courses_module_1 = require("./courses/courses.module");
 const students_module_1 = require("./students/students.module");
+const dotenv = require("dotenv");
+const prisma_service_1 = require("./prisma/prisma.service");
 dotenv.config();
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [quizzes_module_1.QuizzesModule, auth_module_1.AuthModule, questions_module_1.QuestionsModule, choices_module_1.ChoicesModule, courses_module_1.CoursesModule, students_module_1.StudentsModule],
+        imports: [
+            quizzes_module_1.QuizzesModule,
+            auth_module_1.AuthModule,
+            questions_module_1.QuestionsModule,
+            choices_module_1.ChoicesModule,
+            courses_module_1.CoursesModule,
+            students_module_1.StudentsModule,
+        ],
         controllers: [],
         providers: [prisma_service_1.PrismaService],
     })

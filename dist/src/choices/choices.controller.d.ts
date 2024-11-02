@@ -6,24 +6,24 @@ export declare class ChoicesController {
     private readonly choicesService;
     constructor(choicesService: ChoicesService);
     createChoice(questionId: number, req: Request, createChoiceDto: createChoiceDto): Promise<{
-        id: number;
-        text: string;
         questionId: number;
+        id: number;
         createdAt: Date;
         updatedAt: Date;
+        text: string;
     }>;
     updateChoice(questionId: number, id: number, req: Request, updateChoiceDto: updateChoiceDto): Promise<{
-        id: number;
-        text: string;
         questionId: number;
+        id: number;
         createdAt: Date;
         updatedAt: Date;
+        text: string;
     }>;
     deleteChoice(id: number, questionId: number, req: Request): Promise<{
-        id: number;
-        text: string;
         questionId: number;
+        id: number;
         createdAt: Date;
         updatedAt: Date;
+        text: string;
     }>;
 }

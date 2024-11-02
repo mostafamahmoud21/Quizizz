@@ -12,7 +12,13 @@ const questions_service_1 = require("./questions.service");
 const questions_controller_1 = require("./questions.controller");
 const client_1 = require("@prisma/client");
 const auth_module_1 = require("../auth/auth.module");
+const jwt_middleware_1 = require("../auth/middleware/jwt.middleware");
 let QuestionsModule = class QuestionsModule {
+    configure(consumer) {
+        consumer
+            .apply(jwt_middleware_1.JwtMiddleware)
+            .forRoutes(questions_controller_1.QuestionsController);
+    }
 };
 exports.QuestionsModule = QuestionsModule;
 exports.QuestionsModule = QuestionsModule = __decorate([
